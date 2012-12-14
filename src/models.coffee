@@ -1,26 +1,53 @@
-mongoose       = require 'mongoose'
-userSchema     = mongoose.Schema
-  name         : 
-    type       : String
-    required   : true
-  schedules    :
-    type       : [scheduleSchema]
-    default    : []
+mongoose           = require 'mongoose'
+userSchema         = new mongoose.Schema
+  name             : 
+    type           : String
+    required       : true
+  postSchedules    :[
+    type           : mongoose.Schema.Types.ObjectId,
+    ref            : 'postSchedule'
+  ]
+  contents         : [
+    type           : mongoose.Schema.Types.ObjectId,
+    ref            : 'content'
+  ]
+  sources          : [
+    type           : mongoose.Schema.Types.ObjectId,
+    ref            : 'postSchedule'
+  ]
 
-scheduleSchema = mongoose.Schema
-  time         :
-    type       : Date
-    required   : true
-  interval     :
-    type       : Number
-    required   : true
 
+postScheduleSchema = new mongoose.Schema
+  user             :
+    type           : mongoose.Schema.Types.ObjectId
+    ref            : 'user'
+  time             :
+    type           : Date
+    required       : true
+  interval         :
+    type           : Number
+    required       : true
+  contents         : [contentSchema]
+  sources          : [sourceSchema]
 
-module.exports =
-  User         : mongoose.model 'User',userSchema
-  Schedule     : mongoose.model 'Schedule',scheduleSchema
+contentSchema      = new mongoose.Schema
+  user             :
+    type           : mongoose.Schema.Types.ObjectId
+    ref            : 'user'
+  content          :
+    type           : String
 
-mongoose.connect 'mongodb://localhost/qiaowei-db', (err) ->
-  if err
-    console.error err
-    return process.exit()
+sourceSchema       = new mongoose.Schema
+  user             :
+    type           : mongoose.Schema.Types.ObjectId
+    ref            : 'user'
+  url              :
+    type           : String 
+
+module.exports     =
+  postSchedule     : mongoose.model 'postSchedule',postScheduleSchema
+  content          : mongoose.model 'content',contentSchema
+  source           : mongoose.model 'source',sourceSchema
+  user             : mongoose.model 'user',userSchema 
+  connectDb        : (cb)->
+    mongoose.connect 'mongodb://localhost/qiaowei-db',cb
