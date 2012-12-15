@@ -1,16 +1,17 @@
 {
-  "name"            : "qiaowei",
-  "version"         : "0.0.1",
-  "private"         : true,
-  "scripts"         : {
-    "start"         : "node index"
+  "name"                 : "qiaowei",
+  "version"              : "0.0.1",
+  "private"              : true,
+  "scripts"              : {
+    "start"              : "node index"
   },
-  "dependencies"    : {
-    "express"       : "3.0.3",
-    "jade"          : "*",
-    "coffee-script" : "*",
+  "dependencies"         : {
+    "express"            : "3.0.3",
+    "jade"               : "*",
+    "coffee-script"      : "*",
     "iced-coffee-script" : "*",
-    "stylus"        : "*",
-    "mongoose"      : "*"
+    "stylus"             : "*",
+    "mongoose"           : "*",
+    "moment"             : "*"
   }
 }

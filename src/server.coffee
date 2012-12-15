@@ -17,6 +17,7 @@ app.configure ->
   app.use express.methodOverride()
   app.use app.router
   app.use "/assets", express.static(path.join __dirname, "..", "assets")
+  app.locals.moment= require 'moment'
 
 app.configure "development", ->
   app.use express.errorHandler()

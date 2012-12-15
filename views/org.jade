@@ -22,4 +22,12 @@ block content
     input(type='text',name='user[name]',placeholder='用户名')
     button(type='submit')
 
+  h2 内容库
+  for content in org.contents
+    p #{content.content}
+
+  h2 计划任务
+  for postSchedule in org.postSchedules
+    p #{moment(postSchedule.time).format('YYYY/MM/DD')}
+
   pre #{JSON.stringify(org,null,'  ')}
