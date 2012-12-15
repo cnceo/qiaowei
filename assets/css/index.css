@@ -1,18 +1,4 @@
-.module {
-    margin-top:10px;
-}
-.module .hd{
-      height:30px;
-      line-height:30px;
-      font-size:14px;
-      border-bottom:2px solid #ddd;
-      padding-left:10px;
-      font-weight:bold;
-      color:#333;
-    }
-    .module .bd{
-      padding:10px;
-    }
+
     .user_info{
     
     }
