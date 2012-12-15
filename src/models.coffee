@@ -9,7 +9,7 @@ userSchema      = new mongoose.Schema
   doubanToken   : String
   qqToken       : [String]
   
-  editorsOf     :[
+  editorOf     :[
     type        : mongoose.Schema.Types.ObjectId
     ref         : 'org'
   ]
