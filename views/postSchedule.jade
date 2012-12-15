@@ -15,7 +15,8 @@ block content
           .con
             select#ku
               option(value="----") 
-              option(value="fdsf") fsdfs
+              for content in org.contents
+                option(value=content.content) #{content.content}
         .info_item
           .label 定时发布的时间：
           .con

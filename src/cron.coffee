@@ -28,7 +28,7 @@ sendSNS= (content,pic,type,token)->
 setInterval ->
   if postQueue.length!=0
     console.log("queue noempty")
-    post=postQueue.shift()
+    post= postQueue.shift()
     if post.sinaToken
       sendSNS post.content,post.pic,"sina",post.sinaToken
 ,5000 

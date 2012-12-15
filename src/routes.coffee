@@ -180,7 +180,7 @@ module.exports                 = class Routes
       if req.files.file&&req.files.file.name
         stream= fs.createReadStream req.files.file.path
         stream.pipe fs.createWriteStream headPath 
-        fs.on 'close',next
+        stream.on 'close',next
       else
         fs.unlink headPath,(err)->
           next()
@@ -189,7 +189,7 @@ module.exports                 = class Routes
       if req.files.file&&req.files.file.name
         stream= fs.createReadStream req.files.file.path
         stream.pipe fs.createWriteStream headPath 
-        fs.on 'close',next
+        stream.on 'close',next
       else
         fs.unlink headPath,(err)->
           next()
@@ -234,15 +234,20 @@ module.exports                 = class Routes
 
 
     app.all '/postSchedule/:id/*',(req,res,next)->
-      postSchedule.findById(req.params.id).populate('org').exec (err,item)->
+      postSchedule.findById req.params.id,(err,item)->
         res.locals.postSchedule = item
+        next err
+
+    app.all '/postSchedule/:id/*',(req,res,next)->
+      org.findById(res.locals.postSchedule.org).populate('contents').exec (err,item)->
+        res.locals.org= item
         next err
 
     app.all '/postSchedule/:id/*',(req,res,next)->
       return res.send 404 unless res.locals.postSchedule
       next()
     app.get '/postSchedule/:id/',(req,res,next)->
-        res.render 'postSchedule'
+      res.render 'postSchedule'
 
 
     app.all '/postSchedule/:id/save',(req,res,next)->
