@@ -19,8 +19,22 @@ module.exports                 = class Routes
         res.locals.user = item
         next err
 
+
+
+
+
+
+
+
     app.get '/',(req,res,next)->
       res.render 'index'
+
+
+
+
+
+
+
 
     app.all '/org/:id/',(req,res,next)->
       org.findById  req.param.id,(err,item)->
@@ -42,6 +56,13 @@ module.exports                 = class Routes
 
 
 
+
+
+
+
+
+
+
     app.all '/postSchedule/:id/',(req,res,next)->
       postSchedule.findById req.params.id,(err,item)->
         res.locals.postSchedule = item
@@ -59,6 +80,13 @@ module.exports                 = class Routes
 
     app.post '/postSchedule/:id/:method',(req,res,next)->
       res.redirect 'back'
+
+
+
+
+
+
+
 
     app.all '/content/:id/',(req,res,next)->
       content.findById req.params.id,(err,item)->
