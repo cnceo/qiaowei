@@ -70,9 +70,7 @@ module.exports                 = class Routes
       else
         res.redirect '/login'
 
-
-
-
+ 
     app.get '/tqq_auth_cb', (req, res, next) ->
       res.locals.user.qqToken.pop()
       res.locals.user.qqToken.pop()
@@ -80,6 +78,12 @@ module.exports                 = class Routes
       tqq.oauth.accesstoken req.query.code , (error, data)->
         access_token = data.access_token
         openid = data.openid
+        tqq.user.info {clientip:"115.193.182.232",openid:openid,access_token:access_token},(error,data)->
+          console.log(error)
+          name = data.data.nick
+          console.log(name)
+        res.locals.user.qqToken.pop()
+        res.locals.user.qqToken.pop()
         res.locals.user.qqToken.push access_token
         res.locals.user.qqToken.push openid
         next()
@@ -95,7 +99,8 @@ module.exports                 = class Routes
       return next() unless req.query.code
       renren.oauth.accesstoken req.query.code , (error, data)->
         access_token = data.access_token
-
+        renren.user.getInfo {},(error,data)->
+          console.log(data)
         res.locals.user.renrenToken= access_token
         console.log res.locals.user
 
