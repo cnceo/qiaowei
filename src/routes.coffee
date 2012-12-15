@@ -68,7 +68,9 @@ module.exports                 = class Routes
         member.find({name:res.locals.user.name})
         .populate('org')
         .exec (err,items)->
-          res.locals.userOrg= res.locals.user.owns[0]||items[0].org||null
+          res.locals.userOrg= res.locals.user.owns[0]
+          if items.length
+            res.locals.userOrg||=items[0].org
           next()
       else
         res.redirect '/login'
@@ -220,10 +222,13 @@ module.exports                 = class Routes
 
 
 
-    app.all '/postSchedule/new/',(req,res,next)->
-      res.locals.postSchedule = new postSchedule()
+    app.all '/org/:id/postSchedules/new',(req,res,next)->
+      res.locals.postSchedule = new postSchedule
+      res.locals.org.postSchedules.push res.locals.postSchedule
       res.locals.postSchedule.save next
-    app.all '/postSchedule/new/',(req,res,next)->
+    app.all '/org/:id/postSchedules/new',(req,res,next)->
+      res.locals.org.save next
+    app.all '/org/:id/postSchedules/new',(req,res,next)->
       res.redirect "/postSchedule/#{res.locals.postSchedule._id}/"
 
 
