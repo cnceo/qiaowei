@@ -40,7 +40,7 @@ var TimeSelector=function(){
         }
         day.options.add(varItem)
       }
-    }
+    } 
                     
   }
   return {
