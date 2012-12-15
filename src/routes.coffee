@@ -28,9 +28,8 @@ module.exports                 = class Routes
 
 
 
-
-
     app.get '/',(req,res,next)->
+      res.locals.userOrg= res.locals.user.owns[0]||res.locals.user.editorOf[0]||res.locals.posterOf[0]||null
       res.render 'i'
 
 
