@@ -59,7 +59,9 @@ block content
     p #{content.content}
 
   h2 计划任务
-  for postSchedule in org.postSchedules
-    p #{moment(postSchedule.time).fromNow()}
+  ul
+    for postSchedule in org.postSchedules
+      li
+        a(href='/postSchedule/#{postSchedule._id}/') #{moment(postSchedule.time).format('LLL')}开始每#{postSchedule.interval}分钟
 
   pre #{JSON.stringify(org,null,'  ')}
