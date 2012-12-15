@@ -92,7 +92,7 @@ module.exports                 = class Routes
     app.get '/renren_auth_cb', (req, res, next) ->
       renren.oauth.accesstoken req.query.code , (error, data)->
         access_token = data.access_token
-        renren.user.getInfo {},(error,data)->
+        renren.users.getInfo {access_token:access_token},(error,data)->
           console.log(data)
         res.locals.user.renrenToken= access_token
         console.log res.locals.user
