@@ -5,7 +5,7 @@ block content
   .add_info.module 
     .hd 添加一条定时
     .bd 
-      form(action="/postSchedule/#{postSchedule._id}/save")
+      form(action="/postSchedule/#{postSchedule._id}/save",method='post')
         .info_item
           .label 微博内容：
           .con

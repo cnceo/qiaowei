@@ -52,7 +52,8 @@ postScheduleSchema = new mongoose.Schema
   interval         :
     type           : Number
     default        : 0
-  contents         : [contentSchema]
+  content          :
+    type           : String
   retweet          : String
   org              : 
     type           : mongoose.Schema.Types.ObjectId
