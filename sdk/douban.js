@@ -319,7 +319,6 @@ Douban.prototype._base = function () {
           form.append(i, options[i].toString().replace(/__multi__/g, ""));
         }
       };
-      console.log("dd")
       var headers = form.getHeaders();
       form.getLength(function(err,len){
         headers ["Content-length"] =len ;
@@ -333,7 +332,6 @@ Douban.prototype._base = function () {
         });
         form.pipe(re);
         re.on('response', function(res){
-          console.log(res.statusCode)
           var chunks = [], size = 0;
           res.on('data', function (chunk) {
             size += chunk.length;
