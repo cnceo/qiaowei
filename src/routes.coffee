@@ -15,7 +15,11 @@ module.exports                 = class Routes
     @mount app if app?
   mount                        : (app)->
     app.get '*',(req,res,next)->
-      user.findOne({}).populate(['postSchedules','contents','sources']).exec (err,item)->
+      user.findOne({name:'admin'})
+      .populate('owns')
+      .populate('editorOf')
+      .populate('posterOf')
+      .exec (err,item)->
         res.locals.user = item
         next err
 
@@ -44,7 +48,10 @@ module.exports                 = class Routes
       res.redirect "/org/#{res.locals.org._id}/"
 
     app.all '/org/:id/*',(req,res,next)->
-      org.findById(req.params.id).populate(['postSchedule','user','content']).exec (err,item)->
+      org.findById(req.params.id).populate('postSchedules')
+      .populate('editors')
+      .populate('posters')
+      .populate('contents').exec (err,item)->
         res.locals.org = item 
         next err
 
@@ -85,7 +92,6 @@ module.exports                 = class Routes
 
     app.post '/org/:id/editor/new',(req,res,next)->
       res.redirect 'back'
-
 
 
 
