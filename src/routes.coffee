@@ -163,6 +163,7 @@ module.exports                 = class Routes
       next()
     app.get '/org/:id/',(req,res,next)->
       res.render 'org'
+        mode: req.query.mode
 
     app.post '/org/:id/save',(req,res,next)->
       res.locals.org[k]= v for k,v of req.body.org

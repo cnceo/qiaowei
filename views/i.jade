@@ -12,14 +12,14 @@ block content
     .bd
       .info_item 当前拥有的组织： 
       if user.owns.length
-        a(href="/org/#{user.owns[0]._id}/#postSchedules") #{user.owns[0].title}
+        a(href="/org/#{user.owns[0]._id}/") #{user.owns[0].title}
       else
         .info_item 您当前没有创建任何公司组织，
           a(href="/org/new/") 点此创建
       .info_item 当前所属的组织：
       if userOrg
         .item
-          a(href="/org/#{userOrg._id}/#postSchedules") #{userOrg.title}
+          a(href="/org/#{userOrg._id}/?mode=postSchedules") #{userOrg.title}
       else
         .info_item 您当前不属于任何组织，请联系组织管理者添加您到工作组中。
   .sns_info.module
@@ -58,7 +58,7 @@ block content
       h2(class = "hd")  定时功能
       .bd
         .info_item 
-          a(href='/org/#{userOrg._id}/#postSchedules') 管理定时发布 (#{userOrg.postSchedules.length}条待发布)
+          a(href='/org/#{userOrg._id}/?mode=postSchedules') 管理定时发布 (#{userOrg.postSchedules.length}条待发布)
 
     .sns_info.module
       h2(class = "hd")  设置首尾拼图

@@ -2,20 +2,21 @@ extends layout
 
 block content
   link(rel="stylesheet", type="text/css", href="/assets/css/org.css")
+
+  p
+    a(class=mode=='postSchedules'?'active':'' ,href='?mode=') 管理定时发布
+    a(class=mode=='postSchedules'?'':'active',href='?mode=postSchedules') 组织信息
   .error_info.module 
     if String(org._id)!=(userOrg._id)
       h2.hd 对不起，你不属于此组织，请向管理员申请添加您到组织中。
     else
-      h2.hd #{user.name}，您好，这里是#{org.name}的组织库
-  p
-    a(href='#postSchedules') 管理定时发布
-    a(href='#info') 修改组织设置
-  .anchor#postSchedules
-    for postSchedule in org.postSchedules
-      div #{postSchedule.content}
-      a 删除
-    a 添加
-  .anchor#info
+  if mode=='postSchedules'
+    h2.hd #{user.name}，您好，这里是#{org.name}的组织库
+      for postSchedule in org.postSchedules
+        div #{postSchedule.content}
+        a 删除
+      a 添加
+  else
     .org_info.module
       h2.hd 组织信息
       .bd
