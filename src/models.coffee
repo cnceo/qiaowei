@@ -3,6 +3,12 @@ userSchema         = new mongoose.Schema
   name             : 
     type           : String
     required       : true
+
+  sinaToken        : String
+  renrenToken      : String
+  doubanToken      : String
+  qqToken          : [String]
+  
   editorsOf        :[
     type           : mongoose.Schema.Types.ObjectId
     ref            : 'org'
@@ -57,6 +63,7 @@ contentSchema      = new mongoose.Schema
     type           : String
 
 module.exports     =
+  org              : mongoose.model 'org',orgSchema
   postSchedule     : mongoose.model 'postSchedule',postScheduleSchema
   content          : mongoose.model 'content',contentSchema
   user             : mongoose.model 'user',userSchema 
