@@ -36,8 +36,9 @@ module.exports                 = class Routes
 
       
     app.get '*',(req,res,next)->
+      return res.redirect '/login' unless req.session.username
       # 找到用户名，否则打回/login
-      user.findOne({name:'admin'})
+      user.findOne({name:req.session.username})
       .populate('owns')
       .populate('editorOf')
       .populate('posterOf')
