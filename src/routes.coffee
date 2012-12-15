@@ -37,9 +37,13 @@ module.exports                 = class Routes
 
 
     app.all '/org/:id/:method?',(req,res,next)->
-      org.findById  req.param.id,(err,item)->
-        res.locals.org = item || new org()
-        next err
+      if req.param.id=='new'
+        res.locals.org = new org()
+        next()
+      else
+        org.findById  req.param.id,(err,item)->
+          res.locals.org = item 
+          next err
 
     app.get '/org/:id/',(req,res,next)->
       res.render 'org'
@@ -65,9 +69,13 @@ module.exports                 = class Routes
 
 
     app.all '/postSchedule/:id/:method?',(req,res,next)->
-      postSchedule.findById req.params.id,(err,item)->
-        res.locals.postSchedule = item
-        next err
+      if req.param.id=='new'
+        res.locals.postSchedule = new postSchedule()
+        next()
+      else
+        postSchedule.findById req.params.id,(err,item)->
+          res.locals.postSchedule = item
+          next err
 
     app.get '/postSchedule/:id/',(req,res,next)->
         res.render 'postSchedule'
@@ -91,9 +99,13 @@ module.exports                 = class Routes
 
 
     app.all '/content/:id/:method?',(req,res,next)->
-      content.findById req.params.id,(err,item)->
-        res.locals.content = item
-        next err
+      if req.param.id=='new'
+        res.locals.content = new content()
+        next()
+      else
+        content.findById req.params.id,(err,item)->
+          res.locals.content = item
+          next err
 
     app.get '/content/:id/',(req,res,next)->
       res.render 'content'
