@@ -3,6 +3,32 @@ userSchema         = new mongoose.Schema
   name             : 
     type           : String
     required       : true
+  editorsOf        :[
+    type           : mongoose.Schema.Types.ObjectId
+    ref            : 'org'
+  ]
+  posterOf         :[
+    type           : mongoose.Schema.Types.ObjectId
+    ref            : 'org'
+  ]
+  owns             : [
+    type           : mongoose.Schema.Types.ObjectId
+    ref            : 'org'
+  ]
+
+
+orgSchema          = new mongoose.Schema
+  owner            : 
+    type           : mongoose.Schema.Types.ObjectId
+    ref            : 'user'
+  posters          : [
+    type           : mongoose.Schema.Types.ObjectId
+    ref            : 'user'
+  ]
+  editors          : [
+    type           : mongoose.Schema.Types.ObjectId
+    ref            : 'user'
+  ]
   postSchedules    :[
     type           : mongoose.Schema.Types.ObjectId,
     ref            : 'postSchedule'
@@ -11,16 +37,9 @@ userSchema         = new mongoose.Schema
     type           : mongoose.Schema.Types.ObjectId,
     ref            : 'content'
   ]
-  sources          : [
-    type           : mongoose.Schema.Types.ObjectId,
-    ref            : 'source'
-  ]
 
 
 postScheduleSchema = new mongoose.Schema
-  _user            :
-    type           : mongoose.Schema.Types.ObjectId
-    ref            : 'user'
   time             :
     type           : Date
     required       : true
@@ -31,23 +50,15 @@ postScheduleSchema = new mongoose.Schema
   sources          : [sourceSchema]
 
 contentSchema      = new mongoose.Schema
-  _user             :
+  _user            :
     type           : mongoose.Schema.Types.ObjectId
     ref            : 'user'
   content          :
     type           : String
 
-sourceSchema       = new mongoose.Schema
-  _user             :
-    type           : mongoose.Schema.Types.ObjectId
-    ref            : 'user'
-  url              :
-    type           : String 
-
 module.exports     =
   postSchedule     : mongoose.model 'postSchedule',postScheduleSchema
   content          : mongoose.model 'content',contentSchema
-  source           : mongoose.model 'source',sourceSchema
   user             : mongoose.model 'user',userSchema 
   connectDb        : (cb)->
     mongoose.connect 'mongodb://localhost/qiaowei-db',cb
