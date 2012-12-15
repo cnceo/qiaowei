@@ -16,11 +16,17 @@ module.exports                 = class Routes
   constructor                  : (app)->
     @mount app if app?
   mount                        : (app)->
+
+    app.get '/logout',(req,res,next)->
+      # 退出
+      res.redirect '/login'
+
     app.get '/login',(req,res,next)->
       res.render 'login'
 
       
     app.get '*',(req,res,next)->
+      # 找到用户名，否则打回/login
       user.findOne({name:'admin'})
       .populate('owns')
       .populate('editorOf')
