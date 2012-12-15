@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  link(rel="stylesheet", type="text/css", href="/assets/css/index.css")
+  div(class = "user_info module") 
+    h2(class = "hd") 用户信息
+    div(class = "bd")
+      ul(class = "info_list clearfix")
+        li(class = "info_item") 昵称：*** (<a href="">切换账号</a>）
+  div(class = "org_info module") 
+    h2(class = "hd")  组织
+    div(class = "bd")
+      div(class = "info_item") 当前拥有的组织：<a href="">管理此内容库</a>
+      div(class = "info_item") 您当前没有创建任何公司组织，<a href="">点此创建</a>
+      div(class = "info_item") 当前所属的组织：<a href="">管理此内容库</a>
+      div(class = "info_item") 您当前不属于任何组织，请联系组织管理者添加您到工作组中。
+  script(src='/assets/js/index.js')

@@ -16,7 +16,7 @@ app.configure ->
   app.use express.bodyParser()
   app.use express.methodOverride()
   app.use app.router
-  app.use express.static path.join __dirname, "public"
+  app.use "/assets", express.static(path.join __dirname, "..", "assets")
 
 app.configure "development", ->
   app.use express.errorHandler()
