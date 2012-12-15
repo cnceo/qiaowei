@@ -67,12 +67,18 @@ module.exports                 = class Routes
     app.all '*',(req,res,next)->
       if res.locals.user
         member.find({name:res.locals.user.name})
-        .populate('org')
         .exec (err,items)->
           res.locals.userOrg= res.locals.user.owns[0]
           if items.length
             res.locals.userOrg||=items[0].org
-          next()
+          if res.locals.userOrg
+            org.findById(res.locals.userOrg)
+            .populate('postSchedules')
+            .exec (err,item)->
+              res.locals.userOrg = item
+              next err
+          else
+            next()
       else
         res.redirect '/login'
 

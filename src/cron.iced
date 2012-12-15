@@ -67,24 +67,25 @@ module.exports=
 
 module.exports.tick=tick= (cb)->
   query =
+    content:
+      $ne: ''
     time:
-      $gte: new Date()
-      $lte: moment(new Date()).add('seconds',5).toDate()
+      $lte: new Date()
   await postSchedule.find(query).populate('org').exec defer err,items
   for item in items
-    await postSchedule.remove item,defer err
     await user.findById item.org.owner,defer err,owner
+    await postSchedule.remove item,defer err
     await fs.exists path.join(__dirname,'..','assets',"post#{item._id}.jpg"),defer picExists
     picPath=null
     if picExists
       args=[]
       args.push path.join(__dirname,'..','assets',"post#{item._id}.jpg")
-      await fs.exists path.join(__dirname,'..','assets',"org#{item.org.owner}head.jpg"),defer headExists
+      await fs.exists path.join(__dirname,'..','assets',"org#{item.org._id}head.jpg"),defer headExists
       if headExists
-        args.push path.join(__dirname,'..','assets',"org#{item.org.owner}head.jpg")
-      await fs.exists path.join(__dirname,'..','assets',"org#{item.org.owner}foot.jpg"),defer footExists
+        args.push path.join(__dirname,'..','assets',"org#{item.org._id}head.jpg")
+      await fs.exists path.join(__dirname,'..','assets',"org#{item.org._id}foot.jpg"),defer footExists
       if footExists
-        args.push path.join(__dirname,'..','assets',"org#{item.org.owner}foot.jpg")
+        args.push path.join(__dirname,'..','assets',"org#{item.org._id}foot.jpg")
       args.push '-append'
       args.push path.join(__dirname,'..','assets',"post#{item._id}target.jpg")
       await im.convert args,defer err,stderr
