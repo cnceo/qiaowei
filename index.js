@@ -1,4 +1,4 @@
-require('coffee-script');//有这么一句，之后我们就可以随意引用coffee了
+require('coffee-script');require('iced-coffee-script');
 var server =require('./src/server');
 var cron   =require('./src/cron');
 

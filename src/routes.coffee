@@ -8,6 +8,7 @@
 }                              = require './models'
 fs = require 'fs'
 path = require 'path'
+moment = require 'moment'
 connectDb (err)->
   if err
     console.error err 
@@ -234,7 +235,7 @@ module.exports                 = class Routes
 
 
     app.all '/postSchedule/:id/*',(req,res,next)->
-      postSchedule.findById req.params.id,(err,item)->
+      postSchedule.findById(req.params.id).populate('org').exec (err,item)->
         res.locals.postSchedule = item
         next err
 
@@ -252,13 +253,19 @@ module.exports                 = class Routes
 
     app.all '/postSchedule/:id/save',(req,res,next)->
       res.locals.postSchedule[k]= v for k,v of req.body.postSchedule
+      console.log "#{req.body.year}-#{req.body.month}-#{req.body.day} #{req.body.hour}:#{req.body.minute}:00}"
+      res.locals.postSchedule.time= moment("#{req.body.year}-#{req.body.month}-#{req.body.day} #{req.body.hour}:#{req.body.minute}:00}",'YYYY-MM-DD h:m:s').toDate()
       res.locals.postSchedule.save next
+
+    app.all '/postSchedule/:id/save',(req,res,next)->
+      res.redirect "/org/#{res.locals.postSchedule.org._id}/?mode=postSchedules"
+
 
     app.all '/postSchedule/:id/remove',(req,res,next)->
       res.locals.postSchedule.remove next
+    app.all '/postSchedule/:id/remove',(req,res,next)->
+      res.redirect 'back'
 
-    app.all '/postSchedule/:id/:method',(req,res,next)->
-      res.redirect "/org/#{res.locals.postSchedule.org._id}/?mode=postSchedules"
 
 
 
