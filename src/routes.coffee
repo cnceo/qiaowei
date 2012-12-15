@@ -27,7 +27,7 @@ module.exports                 = class Routes
 
 
     app.get '/',(req,res,next)->
-      res.render 'index'
+      res.render 'i'
 
 
 
