@@ -101,6 +101,24 @@ var PS=function(){
   return {
     init:function(){
       TimeSelector.init();
+      this._bind()
+    },
+    _bind:function(){
+      $(".col_pic").mouseenter(function(){
+            $(this).addClass("hover")
+            var pos=$(this).offset()
+            $("#bigpic").css({
+                left:pos.left+90,
+                top:pos.top,
+                display:"block"  
+            }).html("<img src='"+$("img",this).attr("src")+"' />")
+        })
+        $(".col_pic").mouseleave(function(){
+            $(this).removeClass("hover")
+            $("#bigpic").css({
+                display:"none"  
+            })
+        })
     }
   }
 }();

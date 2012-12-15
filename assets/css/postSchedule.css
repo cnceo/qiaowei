@@ -34,3 +34,11 @@
 .list_info .info_item{
   border-bottom:1px solid #eee;
 }
+
+#bigpic{
+  position:absolute;
+  
+}
+#bigpic img{
+  max-width:200px;
+}
