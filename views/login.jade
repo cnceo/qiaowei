@@ -1,4 +1,12 @@
 extends layout
 
 block content
-  a(href="#{authorize.login}") 登录
+  :stylus
+    #content{
+      padding:20px;
+    }
+    #content a{
+      font-size:30px;
+    }
+  #content    
+    a(href="#{authorize.login}") 用新浪微博登录

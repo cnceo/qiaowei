@@ -60,13 +60,6 @@ var TimeSelector=function(){
         }
         $("#minute")[0].options.add(varItem);     
       }
-      for(var i=0;i<60;i++){
-        var varItem = new Option(i, i);      
-        if(i==0){
-          varItem.selected=true;
-        }
-        $("#second")[0].options.add(varItem);     
-      }
       for(var i=2012;i<2022;i++){
         var varItem = new Option(i, i);      
         if(i==nowTime.getYear()){

@@ -20,3 +20,52 @@
   width:50px;
   background:#cce6e8;
 }
+.tab{
+  background:#cfe8cc;
+  padding:0px 20px;
+  margin-top:20px;
+}
+.tab a{
+  
+  line-height:30px;
+  display:inline-block;
+  padding:0 10px;
+  border-top:1px solid #cfe8cc;
+  
+}
+.tab .active{
+  background:#fff;
+}
+
+
+.queue_info .col{
+  display:inline;
+  float:left;
+  padding-left:5px;
+  line-height:20px;
+}
+.queue_info .th .col{
+  font-weight:bold;
+  font-size:14px;
+  line-height:30px;
+}
+.queue_info .col_time{
+  width:100px;
+}
+.queue_info .col_con{
+  width:400px;
+}
+.queue_info .col_pic{
+  width:120px;
+}
+.queue_info .col_del{
+  width:50px;
+}
+.queue_info .info_item{
+  border-bottom:1px solid #eee;
+}
+
+.add_queue{
+  padding:20px;
+  font-size:16px;
+}

@@ -42,3 +42,20 @@
 #bigpic img{
   max-width:300px;
 }
+
+.tab{
+  background:#cfe8cc;
+  padding:0px 20px;
+  margin-top:20px;
+}
+.tab a{
+  
+  line-height:30px;
+  display:inline-block;
+  padding:0 10px;
+  border-top:1px solid #cfe8cc;
+  
+}
+.tab .active{
+  background:#fff;
+}

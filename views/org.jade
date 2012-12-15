@@ -3,9 +3,9 @@ extends layout
 block content
   link(rel="stylesheet", type="text/css", href="/assets/css/org.css")
 
-  p
-    a(class=mode=='postSchedules'?'active':'' ,href='?mode=') 组织信息
-    a(class=mode=='postSchedules'?'':'active',href='?mode=postSchedules') 管理定时发布
+  p.tab
+    a(class=mode=='postSchedules'?'':'active' ,href='?mode=') 组织信息
+    a(class=mode=='postSchedules'?'active':'',href='?mode=postSchedules') 管理定时发布
   .error_info.module 
     if String(org._id)!=(userOrg._id)
       h2.hd 对不起，你不属于此组织，请向管理员申请添加您到组织中。
@@ -14,7 +14,7 @@ block content
 
     
     h2.hd #{user.name}，您好，这里是#{org.name}的组织库
-    .list_info.module
+    .queue_info.module
       .hd 定时列表
       .bd 
         .info_item.clearfix.th 
@@ -31,8 +31,8 @@ block content
             .col_del.col
               a.del(href="/postSchedule/#{postSchedule._id}/") 编辑
               a.del(href="/postSchedule/#{postSchedule._id}/remove") 删除
-    p 
-      a(href='postSchedules/new') 添加
+    p.add_queue 
+      a(href='postSchedules/new') 添加新的定时发布
   else
     .org_info.module
       h2.hd 组织信息
