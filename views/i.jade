@@ -15,7 +15,7 @@ block content
         a(href="/org/#{user.owns[0]._id}/") #{user.owns[0].title}
       else
         .info_item 您当前没有创建任何公司组织，
-          a(href="") 点此创建
+          a(href="/org/new/") 点此创建
       .info_item 当前所属的组织：
       if userOrg
         .item
