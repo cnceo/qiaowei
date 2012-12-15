@@ -68,7 +68,8 @@ contentSchema      = new mongoose.Schema
   org              : 
     type           : mongoose.Schema.Types.ObjectId
     ref            : 'org'
-
+  creator          :
+    type           : String
 
 
 module.exports     =

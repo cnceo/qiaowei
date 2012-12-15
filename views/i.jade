@@ -14,14 +14,15 @@ block content
       if user.owns.length
         a(href="/org/#{user.owns[0]._id}/") #{user.owns[0].title}
       else
-        .info_item 您当前没有创建任何公司组织，
-          a(href="/org/new/") 点此创建
-      .info_item 当前所属的组织：
-      if userOrg
-        .item
-          a(href="/org/#{userOrg._id}/?mode=postSchedules") #{userOrg.title}
-      else
-        .info_item 您当前不属于任何组织，请联系组织管理者添加您到工作组中。
+        
+        if userOrg
+          .info_item 当前所属的组织：
+          .item
+            a(href="/org/#{userOrg._id}/?mode=postSchedules") #{userOrg.title}
+        else
+          .info_item 您当前不属于任何组织，请联系组织管理者添加您到工作组中，或者点击
+          a(href="/org/new/") 创建组织
+          |。
   .sns_info.module
     h2(class = "hd")  绑定社交网络，绑定后信息才可以同步到此社交网络
     .bd

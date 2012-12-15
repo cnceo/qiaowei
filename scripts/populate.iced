@@ -5,6 +5,7 @@ await models.content.remove {},defer err
 await models.org.remove {},defer err
 await models.postSchedule.remove {},defer err
 await models.member.remove {},defer err
+console.log 'ok'
 # admin = new models.user
 #   name: 'admin'
 # org= new models.org

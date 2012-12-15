@@ -28,7 +28,7 @@ module.exports                 = class Routes
     @mount app if app?
   mount                        : (app)->
 
-    app.get '*',(req,res,next)->
+    app.all '*',(req,res,next)->
       return next() unless req.session.username
       user.findOne({name:req.session.username})
       .populate('owns')
@@ -63,7 +63,7 @@ module.exports                 = class Routes
             res.redirect("/")
 
 
-    app.get '*',(req,res,next)->
+    app.all '*',(req,res,next)->
       if res.locals.user
         member.find({name:res.locals.user.name})
         .populate('org')
@@ -263,6 +263,7 @@ module.exports                 = class Routes
     app.post '/org/:id/contents/new',(req,res,next)->
       res.locals.content = new content
         org: res.locals.org
+        creator: res.locals.user.name
       res.locals.content[k]= v for k,v of req.body.content
       res.locals.org.contents.push res.locals.content
       res.locals.content.save next

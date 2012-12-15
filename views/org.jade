@@ -66,8 +66,8 @@ block content
       .bd 
         for content in org.contents
           .info_item.clearfix 
-            .col_con.col fsdfsdfsdfsdfdsf
-            .col_poster.col 添加者昵称
+            .col_con.col #{content.content}
+            .col_poster.col 添加者:#{content.creator}
             .col_del.col
               a.del(href="/content/#{content._id}/remove") 删除
   script(src='/assets/js/org.js')
