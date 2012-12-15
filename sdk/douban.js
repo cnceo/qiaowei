@@ -319,34 +319,57 @@ Douban.prototype._base = function () {
           form.append(i, options[i].toString().replace(/__multi__/g, ""));
         }
       };
+      console.log("dd")
       var headers = form.getHeaders();
       form.getLength(function(err,len){
         headers ["Content-length"] =len ;
         headers ['Authorization'] = "Bearer "+options.access_token
+        var data=""
         var re = https.request({
           method: 'POST',
           host: self.API_HOST,
           path: options.path.replace(self.API_BASE_URL,""),
           headers: headers
-        },function(res, body) {
-          var e=null;
-            try{
-            body=JSON.parse(body)
-            if(body.error_response){
-              e=new Error(body.error_response.msg)
-            }
-          }catch(error){
-            e=error;
-          }
-          callback && callback(e, body);       
-          });
-        re.on('error', function(e){
-          callback && callback(e)
         });
-        re.on('response', function(body){
-          console.log(body)
-        })
         form.pipe(re);
+        re.on('response', function(res){
+          console.log(res.statusCode)
+          var chunks = [], size = 0;
+          res.on('data', function (chunk) {
+            size += chunk.length;
+            chunks.push(chunk);
+          });  
+          res.on('end', function () {
+            var data = null;
+            switch (chunks.length) {
+              case 0:
+                data = new Buffer(0);
+                break;
+              case 1:
+                data = chunks[0];
+                break;
+              default:
+                data = new Buffer(size);
+                for (var i = 0, pos = 0, l = chunks.length; i < l; i++) {
+                  chunks[i].copy(data, pos);
+                  pos += chunks[i].length;
+                }
+                break;
+            }
+            var e=null;
+            var body=data.toString();
+            try{
+              body=JSON.parse(body)
+              if(body.error_response){
+                e=new Error(body.error_response.msg)
+              }
+            }catch(error){
+              e=error;
+            }
+            callback && callback(e, body); 
+          })
+        });
+        callback && callback(null, {}); 
       })
        
       

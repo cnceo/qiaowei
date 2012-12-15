@@ -54,7 +54,8 @@ sendSNS= (content,pic,type,token,cb)->
     if pic
       renren.photos.upload {
         upload:pic,
-        caption:content
+        caption:content,
+        access_token:token
       }, (error,data)->
         console.log(error)
         cb()
