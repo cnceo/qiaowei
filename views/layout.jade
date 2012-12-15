@@ -5,7 +5,8 @@ html
     link(rel="stylesheet", type="text/css", href="/assets/css/common.css")
   body
     div(id="header")
-      h1 巧微
+      h1 
+        a(href = "/") 巧微
       div(class="slogon") 灵活解放生产力
     block content 
     pre #{JSON.stringify(user,null,'  ')}

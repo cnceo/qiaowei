@@ -1,0 +1,35 @@
+extends layout
+
+block content
+  link(rel="stylesheet", type="text/css", href="/assets/css/org.css")
+  div(class = "error_info module") 
+    h2(class = "hd") 对不起，你不属于此组织，请向管理员申请添加您到组织中。
+    h2(class = "hd") ****，您好，这里是***的组织库
+  div(class = "org_info module") 
+    h2(class = "hd") 组织信息
+    div(class = "bd")
+      ul(class = "info_list clearfix")
+        li.info_item 组织名称：****
+        li.info_item 成员构成：**** 
+        li.info_item 添加新成员：<input type=text placeholder="再次输入成员的微博名称"/> <button class=btn>添加</button>
+  .add_info.module 
+    h2.hd 添加一条内容
+    .bd 
+      .info_item 
+        textarea
+      .info_item
+        button.btn 添加
+  .list_info.module
+    h2.hd 内容库
+    .bd 
+      .info_item.clearfix 
+        .col_con.col fsdfsdfsdfsdfdsf
+        .col_poster.col 添加者昵称
+        .col_del.col
+          a.del(href="#") 删除
+      .info_item
+        .col_con.col fsdfsdfsdfsdfdsf
+        .col_poster.col 添加者昵称
+        .col_del.col
+          a.del(href="#") 删除
+  script(src='/assets/js/org.js')
