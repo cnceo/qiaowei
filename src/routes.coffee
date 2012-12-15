@@ -71,37 +71,51 @@ module.exports                 = class Routes
         res.redirect '/login'
 
 
+
+
     app.get '/tqq_auth_cb', (req, res, next) ->
+      res.locals.user.qqToken.pop()
+      res.locals.user.qqToken.pop()
+      return next() unless req.query.code
       tqq.oauth.accesstoken req.query.code , (error, data)->
         access_token = data.access_token
         openid = data.openid
-        res.locals.user.qqToken.pop()
-        res.locals.user.qqToken.pop()
         res.locals.user.qqToken.push access_token
         res.locals.user.qqToken.push openid
-        res.locals.user.save next
-        
+        next()
+
+    app.get '/tqq_auth_cb', (req, res, next) ->    
+      res.locals.user.save next
     app.get '/tqq_auth_cb', (req, res, next) ->
       res.redirect("/")
 
+
     app.get '/renren_auth_cb', (req, res, next) ->
+      res.locals.user.renrenToken= null
+      return next() unless req.query.code
       renren.oauth.accesstoken req.query.code , (error, data)->
         access_token = data.access_token
 
         res.locals.user.renrenToken= access_token
         console.log res.locals.user
-        res.locals.user.save next
-        
+
+    app.get '/renren_auth_cb', (req, res, next) ->    
+      res.locals.user.save next
     app.get '/renren_auth_cb', (req, res, next) ->
       res.redirect("/")
+
+
+
        
     app.get '/douban_auth_cb', (req, res, next) ->
+      res.locals.user.doubanToken= null
+      return next() unless req.query.code
       douban.oauth.accesstoken req.query.code , (error, data)->
         access_token = data.access_token
-
         res.locals.user.doubanToken= access_token
-        res.locals.user.save next
-        
+
+    app.get '/douban_auth_cb', (req, res, next) ->    
+      res.locals.user.save next
     app.get '/douban_auth_cb', (req, res, next) ->
       res.redirect("/")
 
