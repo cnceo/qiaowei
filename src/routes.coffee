@@ -3,6 +3,7 @@
   postSchedule
   content
   org
+  member
   connectDb
 }                              = require './models'
 fs = require 'fs'
@@ -31,8 +32,6 @@ module.exports                 = class Routes
       return next() unless req.session.username
       user.findOne({name:req.session.username})
       .populate('owns')
-      .populate('editorOf')
-      .populate('posterOf')
       .exec (err,item)->
         res.locals.user = item
         next err
@@ -66,8 +65,11 @@ module.exports                 = class Routes
 
     app.get '*',(req,res,next)->
       if res.locals.user
-        res.locals.userOrg= res.locals.user.owns[0]||res.locals.user.editorOf[0]||res.locals.user.posterOf[0]||null
-        next()
+        member.find({name:res.locals.user.name})
+        .populate('org')
+        .exec (err,items)->
+          res.locals.userOrg= res.locals.user.owns[0]||items[0].org||null
+          next()
       else
         res.redirect '/login'
 
@@ -151,8 +153,7 @@ module.exports                 = class Routes
       org.findById(req.params.id)
       .populate('owner')
       .populate('postSchedules')
-      .populate('editors')
-      .populate('posters')
+      .populate('members')
       .populate('contents').exec (err,item)->
         res.locals.org = item 
         next err
@@ -196,51 +197,25 @@ module.exports                 = class Routes
 
 
 
-    app.post '/org/:id/editor/new',(req,res,next)->
-      user.findOne {name:req.body.user.name},(err,item)->
-        res.locals.newEditor = item
-        next err
+    app.post '/org/:id/members/new',(req,res,next)->
+      newMember= new member
+        name:req.body.member.name
+        org:res.locals.org
+      res.locals.org.members.push newMember
+      newMember.save next
 
 
-
-
-    app.post '/org/:id/editor/new',(req,res,next)->
-      return res.send 404 unless res.locals.newEditor
-      next()
-    app.post '/org/:id/editor/new',(req,res,next)->
-      res.locals.newEditor.editorOf.push res.locals.org
-      res.locals.org.editors.push res.locals.newEditor
+    app.post '/org/:id/members/new',(req,res,next)->
       res.locals.org.save next
 
-    app.post '/org/:id/editor/new',(req,res,next)->
-      res.locals.newEditor.save next
-
-    app.post '/org/:id/editor/new',(req,res,next)->
+    app.post '/org/:id/members/new',(req,res,next)->
       res.redirect 'back'
 
+    app.all '/org/:id/members/:name/remove',(req,res,next)->
+      member.remove {name:req.params.name},next
 
-
-
-    app.post '/org/:id/poster/new',(req,res,next)->
-      user.findOne {name:req.body.user.name},(err,item)->
-        res.locals.newPoster = item
-        next err
-
-    app.post '/org/:id/poster/new',(req,res,next)->
-      return res.send 404 unless res.locals.newPoster
-      next()
-    app.post '/org/:id/poster/new',(req,res,next)->
-      res.locals.newPoster.posterOf.push res.locals.org
-      res.locals.org.posters.push res.locals.newPoster
-      res.locals.org.save next
-
-    app.post '/org/:id/poster/new',(req,res,next)->
-      res.locals.newPoster.save next
-
-    app.post '/org/:id/poster/new',(req,res,next)->
+    app.all '/org/:id/members/:name/:method',(req,res,next)->
       res.redirect 'back'
-
-
 
 
 
@@ -278,11 +253,15 @@ module.exports                 = class Routes
 
 
 
-    app.all '/content/new/',(req,res,next)->
+    app.post '/org/:id/contents/new',(req,res,next)->
       res.locals.content = new content()
+      res.locals.content[k]= v for k,v of req.body.content
+      res.locals.org.contents.push res.locals.content
       res.locals.content.save next
-    app.all '/content/new/',(req,res,next)->
-      res.redirect "/content/#{res.locals.content._id}/"
+    app.post '/org/:id/contents/new',(req,res,next)->
+      res.locals.org.save next
+    app.post '/org/:id/contents/new',(req,res,next)->
+      res.redirect 'back'
 
 
     app.all '/content/:id/*',(req,res,next)->
@@ -300,9 +279,9 @@ module.exports                 = class Routes
       res.locals.content[k]= v for k,v of req.body.content
       res.locals.content.save next
 
-    app.post '/content/:id/remove',(req,res,next)->
+    app.all '/content/:id/remove',(req,res,next)->
       res.locals.content.remove next
 
-    app.post '/content/:id/:method',(req,res,next)->
+    app.all '/content/:id/:method',(req,res,next)->
       res.redirect 'back'
     

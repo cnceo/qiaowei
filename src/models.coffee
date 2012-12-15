@@ -3,7 +3,7 @@ userSchema         = new mongoose.Schema
   name             : 
     type           : String
     required       : true
-    unique: true
+    unique         : true
 
   sinaToken        : String
   renrenToken      : String
@@ -12,19 +12,15 @@ userSchema         = new mongoose.Schema
   doubanName       : String
   qqToken          : [String]
   qqName           : String 
-  
-  editorOf         :[
-    type           : mongoose.Schema.Types.ObjectId
-    ref            : 'org'
-  ]
-  posterOf         :[
-    type           : mongoose.Schema.Types.ObjectId
-    ref            : 'org'
-  ]
   owns             : [
     type           : mongoose.Schema.Types.ObjectId
     ref            : 'org'
   ]
+memberSchema       = new mongoose.Schema
+  name             : String
+  org              : 
+    type           : mongoose.Schema.Types.ObjectId
+    ref            : 'org'
 
 
 orgSchema          = new mongoose.Schema
@@ -34,13 +30,10 @@ orgSchema          = new mongoose.Schema
   owner            : 
     type           : mongoose.Schema.Types.ObjectId
     ref            : 'user'
-  posters          : [
+
+  members          : [
     type           : mongoose.Schema.Types.ObjectId
-    ref            : 'user'
-  ]
-  editors          : [
-    type           : mongoose.Schema.Types.ObjectId
-    ref            : 'user'
+    ref            : 'member'
   ]
   postSchedules    :[
     type           : mongoose.Schema.Types.ObjectId,
@@ -76,5 +69,6 @@ module.exports     =
   postSchedule     : mongoose.model 'postSchedule',postScheduleSchema
   content          : mongoose.model 'content',contentSchema
   user             : mongoose.model 'user',userSchema 
+  member :        mongoose.model 'member',memberSchema
   connectDb        : (cb)->
     mongoose.connect 'mongodb://localhost/qiaowei-db',cb

@@ -5,38 +5,52 @@ block content
   .error_info.module 
     if String(org._id)!=(userOrg._id)
       h2.hd 对不起，你不属于此组织，请向管理员申请添加您到组织中。
-    h2.hd #{user.name}，您好，这里是#{org.name}的组织库
-  .org_info.module
-    h2.hd 组织信息
-    .bd
-      ul.info_list.clearfix
-        li.info_item 组织名称：#{org.name}
-        li.info_item 组织老大：#{org.owner.name}
-        li.info_item 组织构成：
-          for editor in org.editors
-            span #{editor.name}
-        li.info_item 添加新成员：<input type=text placeholder="再次输入成员的微博名称"/> <button class=btn>添加</button>
-  .add_info.module 
-    h2.hd 添加一条内容
-    .bd 
-      form(action='/org/#{org._id}/save',method='post')
-        .info_item 
-          textarea(name="org[title]")
-        .info_item
-          button.btn 添加
-  .list_info.module
-    h2.hd 内容库
-    .bd 
-      .info_item.clearfix 
-        .col_con.col fsdfsdfsdfsdfdsf
-        .col_poster.col 添加者昵称
-        .col_del.col
-          a.del(href="#") 删除
-      .info_item.clearfix
-        .col_con.col fsdfsdfsdfsdfdsf fsdfsdfsdfsdfdsf fsdfsdfsdfsdfdsf fsdfsdfsdfsdfdsf fsdfsdfsdfsdfdsf fsdfsdfsdfsdfdsf
-        .col_poster.col 添加者昵称
-        .col_del.col
-          a.del(href="#") 删除
+    else
+      h2.hd #{user.name}，您好，这里是#{org.name}的组织库
+  p
+    a(href='#postSchedules') 管理定时发布
+    a(href='#info') 修改组织设置
+  .anchor#postSchedules
+    for postSchedule in org.postSchedules
+      div #{postSchedule.content}
+      a 删除
+    a 添加
+  .anchor#info
+    .org_info.module
+      h2.hd 组织信息
+      .bd
+        form(method='post',action='save')
+          ul.info_list.clearfix
+            li.info_item 组织名称：
+              input(type='text',name='org[title]',value=org.title)
+              button.btn(type='submit') 修改
+            li.info_item 组织老大：#{org.owner.name}
+            li.info_item 组织构成：
+              for member in org.members
+                span #{member.name}
+                a(href='members/#{member.name}/remove') 删除
+        form(action='members/new',method='post')
+          ul.info_list.clearfix
+            li.info_item 添加新成员：
+            input(type='text',name='member[name]',placeholder='请输入成员的微博用户名') 
+            button.btn 添加
+    .add_info.module 
+      h2.hd 添加一条内容
+      .bd 
+        form(action='/org/#{org._id}/contents/new',method='post')
+          .info_item 
+            textarea(name="content[content]")
+          .info_item
+            button.btn(type='submit') 添加
+    .list_info.module
+      h2.hd 内容库
+      .bd 
+        for content in org.contents
+          .info_item.clearfix 
+            .col_con.col fsdfsdfsdfsdfdsf
+            .col_poster.col 添加者昵称
+            .col_del.col
+              a.del(href="/content/#{content._id}/remove") 删除
   script(src='/assets/js/org.js')
 
 //- block content

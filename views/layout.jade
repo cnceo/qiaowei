@@ -10,7 +10,9 @@ html
         a(href = "/") 巧微
       div(class="slogon") 灵活解放生产力
     block content 
-    
     :stylus
-      /*样式表就写这里吧，没必要再弄public了*/
+      .anchor
+        display none
+        &:target
+          display block
     
