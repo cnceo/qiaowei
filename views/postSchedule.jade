@@ -9,7 +9,13 @@ block content
         .info_item
           .label 微博内容：
           .con
-            textarea(placeholder="微博内容",name='postSchedule[content]',value=postSchedule.content)
+            textarea#source(placeholder="微博内容",name='postSchedule[content]',value=postSchedule.content)
+        .info_item
+          .label 或者直接从内容库选择：
+          .con
+            select#ku
+              option(value="----") 
+              option(value="fdsf") fsdfs
         .info_item
           .label 定时发布的时间：
           .con

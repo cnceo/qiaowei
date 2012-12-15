@@ -112,6 +112,9 @@ var PS=function(){
                 display:"none"  
             })
         })
+        $("#ku").change(function(){
+          $("#source").val(this.value)
+        })
     }
   }
 }();
