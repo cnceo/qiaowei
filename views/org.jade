@@ -4,17 +4,33 @@ block content
   link(rel="stylesheet", type="text/css", href="/assets/css/org.css")
 
   p
-    a(class=mode=='postSchedules'?'active':'' ,href='?mode=') 管理定时发布
-    a(class=mode=='postSchedules'?'':'active',href='?mode=postSchedules') 组织信息
+    a(class=mode=='postSchedules'?'active':'' ,href='?mode=') 组织信息
+    a(class=mode=='postSchedules'?'':'active',href='?mode=postSchedules') 管理定时发布
   .error_info.module 
     if String(org._id)!=(userOrg._id)
       h2.hd 对不起，你不属于此组织，请向管理员申请添加您到组织中。
     else
   if mode=='postSchedules'
+
+    
     h2.hd #{user.name}，您好，这里是#{org.name}的组织库
-      for postSchedule in org.postSchedules
-        div #{postSchedule.content}
-        a(href='/postSchedule/#{postSchedule._id}/remove') 删除
+    .list_info.module
+      .hd 定时列表
+      .bd 
+        .info_item.clearfix.th 
+          .col_time.col 发布时间
+          .col_con.col 微博内容
+          .col_pic.col 微博图片
+          .col_del.col 操作
+        for postSchedule in org.postSchedules
+          .info_item.clearfix 
+            .col_time.col #{moment(postSchedule.time).format('LLL')}
+            .col_con.col #{postSchedule.content}
+            .col_pic.col 
+              img(src="http://ww1.sinaimg.cn/large/42976c84jw1dzt3i2a0i2j.jpg", width="100", height="100")
+            .col_del.col
+              a.del(href="/postSchedule/#{postSchedule._id}/") 编辑
+              a.del(href="/postSchedule/#{postSchedule._id}/remove") 删除
     p 
       a(href='postSchedules/new') 添加
   else

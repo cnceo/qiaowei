@@ -224,6 +224,7 @@ module.exports                 = class Routes
 
     app.all '/org/:id/postSchedules/new',(req,res,next)->
       res.locals.postSchedule = new postSchedule
+        org: res.locals.org
       res.locals.org.postSchedules.push res.locals.postSchedule
       res.locals.postSchedule.save next
     app.all '/org/:id/postSchedules/new',(req,res,next)->
@@ -233,7 +234,7 @@ module.exports                 = class Routes
 
 
     app.all '/postSchedule/:id/*',(req,res,next)->
-      postSchedule.findById req.params.id,(err,item)->
+      postSchedule.findById(req.params.id).populate('org').exec (err,item)->
         res.locals.postSchedule = item
         next err
 
@@ -244,15 +245,15 @@ module.exports                 = class Routes
         res.render 'postSchedule'
 
 
-    app.post '/postSchedule/:id/save',(req,res,next)->
+    app.all '/postSchedule/:id/save',(req,res,next)->
       res.locals.postSchedule[k]= v for k,v of req.body.postSchedule
       res.locals.postSchedule.save next
 
-    app.post '/postSchedule/:id/remove',(req,res,next)->
+    app.all '/postSchedule/:id/remove',(req,res,next)->
       res.locals.postSchedule.remove next
 
-    app.post '/postSchedule/:id/:method',(req,res,next)->
-      res.redirect 'back'
+    app.all '/postSchedule/:id/:method',(req,res,next)->
+      res.redirect "/org/#{res.locals.postSchedule.org._id}/?mode=postSchedules"
 
 
 
@@ -260,18 +261,19 @@ module.exports                 = class Routes
 
 
     app.post '/org/:id/contents/new',(req,res,next)->
-      res.locals.content = new content()
+      res.locals.content = new content
+        org: res.locals.org
       res.locals.content[k]= v for k,v of req.body.content
       res.locals.org.contents.push res.locals.content
       res.locals.content.save next
     app.post '/org/:id/contents/new',(req,res,next)->
       res.locals.org.save next
     app.post '/org/:id/contents/new',(req,res,next)->
-      res.redirect 'back'
+      res.redirect "/org/#{res.locals.org._id}/"
 
 
     app.all '/content/:id/*',(req,res,next)->
-      content.findById req.params.id,(err,item)->
+      content.findById(req.params.id).populate('org').exec (err,item)->
         res.locals.content = item
         next err
 

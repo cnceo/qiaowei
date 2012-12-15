@@ -12,6 +12,7 @@ app.configure ->
   app.set "views", path.join __dirname , '..' , 'views'
   app.set "view engine", "jade"
   app.use express.favicon()
+  app.use "/assets", express.static(path.join __dirname, "..", "assets")
   app.use express.logger("dev")
   app.use express.bodyParser()
   app.use express.cookieParser()
@@ -19,7 +20,6 @@ app.configure ->
   app.use express.methodOverride()
   app.use app.router
   
-  app.use "/assets", express.static(path.join __dirname, "..", "assets")
   app.locals.moment= require 'moment'
   app.locals.moment.lang('zh-cn');
 

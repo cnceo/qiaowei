@@ -54,6 +54,9 @@ postScheduleSchema = new mongoose.Schema
     default        : 0
   contents         : [contentSchema]
   retweet          : String
+  org              : 
+    type           : mongoose.Schema.Types.ObjectId
+    ref            : 'org'
 
 contentSchema      = new mongoose.Schema
   _user            :
@@ -61,6 +64,9 @@ contentSchema      = new mongoose.Schema
     ref            : 'user'
   content          :
     type           : String
+  org              : 
+    type           : mongoose.Schema.Types.ObjectId
+    ref            : 'org'
 
 
 
@@ -69,6 +75,6 @@ module.exports     =
   postSchedule     : mongoose.model 'postSchedule',postScheduleSchema
   content          : mongoose.model 'content',contentSchema
   user             : mongoose.model 'user',userSchema 
-  member :        mongoose.model 'member',memberSchema
+  member           :        mongoose.model 'member',memberSchema
   connectDb        : (cb)->
     mongoose.connect 'mongodb://localhost/qiaowei-db',cb
