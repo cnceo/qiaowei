@@ -54,6 +54,7 @@ module.exports                 = class Routes
       sina.oauth.accesstoken req.query.code , (error, data)->
         access_token = data.access_token 
         sina.users.show {source:config.sdks.sina.app_key,uid:data.uid,access_token:access_token,method:"GET"}, (error, data)->
+          console.log(error)
           name = data.screen_name
           user.findOne {name:name},(err,item)->
           item = new user() unless item
@@ -70,11 +71,15 @@ module.exports                 = class Routes
       else
         res.redirect '/login'
 
-
+ 
     app.get '/tqq_auth_cb', (req, res, next) ->
       tqq.oauth.accesstoken req.query.code , (error, data)->
         access_token = data.access_token
         openid = data.openid
+        tqq.user.info {clientip:"115.193.182.232",openid:openid,access_token:access_token},(error,data)->
+          console.log(error)
+          name = data.data.nick
+          console.log(name)
         res.locals.user.qqToken.pop()
         res.locals.user.qqToken.pop()
         res.locals.user.qqToken.push access_token
@@ -87,7 +92,8 @@ module.exports                 = class Routes
     app.get '/renren_auth_cb', (req, res, next) ->
       renren.oauth.accesstoken req.query.code , (error, data)->
         access_token = data.access_token
-
+        renren.user.getInfo {},(error,data)->
+          console.log(data)
         res.locals.user.renrenToken= access_token
         console.log res.locals.user
         res.locals.user.save next
