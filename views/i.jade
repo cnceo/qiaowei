@@ -69,9 +69,20 @@ block content
             |，
             a(href="/org/#{userOrg._id}/setHead") 删除
             |）
-          form.anchor#headThumb
-            input(type='file')
-            button(type='submit')
+          form.anchor#headThumb(enctype='multipart/form-data',method='post',action='/org/#{userOrg._id}/setHead')
+            input(type='file',name='file')
+            button(type='submit') 上传
           .pic
-            img(src = "/org/#{userOrg._id}/head.jpg")
+            img(style='width:400px;',src = "/assets/org#{userOrg._id}head.jpg")
+        .info_item
+          .title 尾部模板图 （
+            a(href="#headThumb") 重新设置
+            |，
+            a(href="/org/#{userOrg._id}/setFoot") 删除
+            |）
+          form.anchor#headThumb(enctype='multipart/form-data',method='post',action='/org/#{userOrg._id}/setFoot')
+            input(type='file',name='file')
+            button(type='submit') 上传
+          .pic
+            img(style='width:400px;',src = "/assets/org#{userOrg._id}foot.jpg")
   script(src='/assets/js/index.js')

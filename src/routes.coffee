@@ -5,6 +5,8 @@
   org
   connectDb
 }                              = require './models'
+fs = require 'fs'
+path = require 'path'
 connectDb (err)->
   if err
     console.error err 
@@ -73,8 +75,31 @@ module.exports                 = class Routes
     app.post '/org/:id/remove',(req,res,next)->
       res.locals.org.remove next
 
-    app.post '/org/:id/:method',(req,res,next)->
+
+    app.all '/org/:id/setHead',(req,res,next)->
+      headPath= path.join(__dirname,'..','assets',"org#{res.locals.org._id}head.jpg")
+      if req.files.file&&req.files.file.name
+        stream= fs.createReadStream req.files.file.path
+        stream.pipe fs.createWriteStream headPath 
+        fs.on 'close',next
+      else
+        fs.unlink headPath,(err)->
+          next()
+    app.all '/org/:id/setFoot',(req,res,next)->
+      headPath= path.join(__dirname,'..','assets',"org#{res.locals.org._id}foot.jpg")
+      if req.files.file&&req.files.file.name
+        stream= fs.createReadStream req.files.file.path
+        stream.pipe fs.createWriteStream headPath 
+        fs.on 'close',next
+      else
+        fs.unlink headPath,(err)->
+          next()
+
+    app.all '/org/:id/:method',(req,res,next)->
       res.redirect 'back'
+
+
+
 
     app.post '/org/:id/editor/new',(req,res,next)->
       user.findOne {name:req.body.user.name},(err,item)->
@@ -119,7 +144,6 @@ module.exports                 = class Routes
 
     app.post '/org/:id/poster/new',(req,res,next)->
       res.redirect 'back'
-
 
 
 
