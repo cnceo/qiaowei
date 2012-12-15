@@ -14,6 +14,10 @@ module.exports                 = class Routes
   constructor                  : (app)->
     @mount app if app?
   mount                        : (app)->
+    app.get '/login',(req,res,next)->
+      res.render 'login'
+
+      
     app.get '*',(req,res,next)->
       user.findOne({name:'admin'})
       .populate('owns')
@@ -23,9 +27,11 @@ module.exports                 = class Routes
         res.locals.user = item
         next err
 
-
-
-
+    app.get '*',(req,res,next)->
+      if res.locals.user    
+        next()
+      else
+        res.redirect '/login'
 
 
     app.get '/',(req,res,next)->
@@ -113,6 +119,8 @@ module.exports                 = class Routes
 
     app.post '/org/:id/poster/new',(req,res,next)->
       res.redirect 'back'
+
+
 
 
 
