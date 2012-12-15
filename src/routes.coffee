@@ -54,7 +54,7 @@ module.exports                 = class Routes
       sina.oauth.accesstoken req.query.code , (error, data)->
         access_token = data.access_token 
         res.cookie('sina_token',access_token);
-        res.redirect("/")          
+        res.redirect("/")
        
     app.get '/tqq_auth_cb', (req, res, next) ->
       tqq.oauth.accesstoken req.query.code , (error, data)->
