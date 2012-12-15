@@ -9,6 +9,16 @@ connectDb (err)->
   if err
     console.error err 
     process.exit 1
+config = require './../config.js'
+authorize = require './../sdk/authorize.js'
+Sina = require './../sdk/sina.js',
+TQQ =  require './../sdk/tqq.js',
+RenRen = require './../sdk/renren.js',
+Douban = require './../sdk/douban.js'
+sina = new Sina(config.sdks.sina)
+tqq = new TQQ(config.sdks.tqq)
+renren = new RenRen(config.sdks.renren)
+douban = new Douban(config.sdks.douban)
 
 module.exports                 = class Routes
   constructor                  : (app)->
@@ -36,6 +46,12 @@ module.exports                 = class Routes
 
     app.get '/',(req,res,next)->
       res.locals.userOrg= res.locals.user.owns[0]||res.locals.user.editorOf[0]||res.locals.posterOf[0]||null
+      res.locals.authorize = {
+        "sina" : authorize.sina(config.sdks.sina),
+        "renren" : authorize.renren(config.sdks.renren),
+        "douban" : authorize.douban(config.sdks.douban),
+        "tqq" : authorize.tqq(config.sdks.tqq)
+      }
       res.render 'i'
 
 
@@ -186,4 +202,32 @@ module.exports                 = class Routes
 
     app.post '/content/:id/:method',(req,res,next)->
       res.redirect 'back'
-      
+    
+    
+    app.get '/sina_auth_cb', (req, res, next) ->
+      sina.oauth.accesstoken req.query.code , (error, data)->
+        access_token = data.access_token 
+        res.cookie('sina_token',access_token);
+        res.redirect("/")          
+       
+    app.get '/tqq_auth_cb', (req, res, next) ->
+      tqq.oauth.accesstoken req.query.code , (error, data)->
+        access_token = data.access_token
+        openid = data.openid
+        res.cookie('tqq_token',access_token);
+        res.cookie('tqq_openid',openid);
+        res.redirect("/")
+
+    app.get '/renren_auth_cb', (req, res, next) ->
+      renren.oauth.accesstoken req.query.code , (error, data)->
+        access_token = data.access_token
+        openid = data.openid
+        res.cookie('renren_token',access_token);
+        res.redirect("/")
+       
+    app.get '/douban_auth_cb', (req, res, next) ->
+      douban.oauth.accesstoken req.query.code , (error, data)->
+        access_token = data.access_token
+        openid = data.openid
+        res.cookie('douban_token',access_token);
+        res.redirect("/")

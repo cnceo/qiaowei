@@ -30,23 +30,23 @@ block content
           |（已绑定）
         else
           |（未绑定，
-          a(href="") 点击绑定
+          a(href="#{authorize.sina}") 点击绑定
           |）
       .info_item 腾讯微博 
         if user.qqToken.length
           |（已绑定）
         else
-          |（未绑定，<a href="">点击绑定</a>）
+          |（未绑定，<a href="#{authorize.tqq}">点击绑定</a>）
       .info_item 人人网 
         if user.renrenToken
           |（已绑定）
         else
-          |（未绑定，<a href="">点击绑定</a>） 
+          |（未绑定，<a href="#{authorize.renren}">点击绑定</a>） 
       .info_item 豆瓣 
         if user.doubanToken
           |（已绑定）
         else
-          |（未绑定，<a href="">点击绑定</a>）
+          |（未绑定，<a href="#{authorize.douban}">点击绑定</a>）
   if userOrg
     .sns_info.module
       h2(class = "hd")  定时功能
