@@ -9,6 +9,7 @@
     "express"       : "3.0.3",
     "jade"          : "*",
     "coffee-script" : "*",
+    "iced-coffee-script" : "*",
     "stylus"        : "*",
     "mongoose"      : "*"
   }

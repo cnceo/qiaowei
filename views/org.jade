@@ -15,10 +15,11 @@ block content
   .add_info.module 
     h2.hd 添加一条内容
     .bd 
-      .info_item 
-        textarea
-      .info_item
-        button.btn 添加
+      form(action='/org/#{org._id}/save',method='post')
+        .info_item 
+          textarea(name="org[title]")
+        .info_item
+          button.btn 添加
   .list_info.module
     h2.hd 内容库
     .bd 
@@ -33,3 +34,24 @@ block content
         .col_del.col
           a.del(href="#") 删除
   script(src='/assets/js/org.js')
+
+//- block content
+  for editor in org.editors
+    p #{editor.name}
+      a(href='editor/#{editor.id}/remove') 删除
+
+  form(action='editor/new',method='post')
+    input(type='text',name='user[name]',placeholder='用户名')
+    button(type='submit')
+
+
+  h2 管理员
+  for poster in org.posters
+    p #{poster.name}
+      a(href='poster/#{poster._id}/remove') 删除
+
+  form(action='poster/new',method='post')
+    input(type='text',name='user[name]',placeholder='用户名')
+    button(type='submit')
+
+  pre #{JSON.stringify(org,null,'  ')}
