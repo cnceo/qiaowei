@@ -13,7 +13,7 @@ block content
   if mode=='postSchedules'
 
     
-    h2.hd #{user.name}，您好，这里是#{org.name}的组织库
+    h2.hd(style="padding-left:10px;") #{user.name}，您好，这里是您的的定时列表
     .queue_info.module
       .hd 定时列表
       .bd 
@@ -34,6 +34,22 @@ block content
     p.add_queue 
       a(href='postSchedules/new') 添加新的定时发布
     div#bigpic(style="display:none;")
+    script
+      $(".col_pic").mouseenter(function(){
+            $(this).addClass("hover")
+            var pos=$(this).offset()
+            $("#bigpic").css({
+                left:pos.left+90,
+                top:pos.top,
+                display:"block"  
+            }).html("<img src='"+$("img",this).attr("src")+"' />")
+        })
+        $(".col_pic").mouseleave(function(){
+            $(this).removeClass("hover")
+            $("#bigpic").css({
+                display:"none"  
+            })
+        })
   else
     .org_info.module
       h2.hd 组织信息

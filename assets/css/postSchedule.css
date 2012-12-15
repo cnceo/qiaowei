@@ -34,7 +34,9 @@
 .list_info .info_item{
   border-bottom:1px solid #eee;
 }
-
+#ku{
+  width:500px;
+}
 #bigpic{
   position:absolute;
   

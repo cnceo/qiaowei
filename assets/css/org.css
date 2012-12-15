@@ -69,3 +69,9 @@
   padding:20px;
   font-size:16px;
 }
+#bigpic{
+  position:absolute;
+}
+#bigpic img{
+  max-width:300px;
+}
