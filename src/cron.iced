@@ -42,8 +42,47 @@ sendSNS= (content,pic,type,token,cb)->
         console.log(error)
         cb()
     else
-      cb()
-      
+      tqq.t.add {
+        content:content,
+        clientip:"115.193.182.232",
+        openid:token[1],
+        access_token:token[0]
+      }, (error,data)->
+        console.log(error)
+        cb()
+  if type=="renren"
+    if pic
+      renren.photos.upload {
+        upload:pic,
+        caption:content
+      }, (error,data)->
+        console.log(error)
+        cb()
+    else
+      renren.status.set {
+        status:content,
+        access_token:token
+      }, (error,data)->
+        console.log(error)
+        cb()
+  if type=="douban"
+    if pic
+      douban.shuo.statuses {
+        access_token:token,
+        source:config.sdks.douban.app_key,
+        text:content,
+        image:pic
+      },(error,data)->
+        console.log(error)
+        cb()
+    else
+      douban.shuo.statuses {
+        access_token:token,
+        source:config.sdks.douban.app_key,
+        text:content
+      },(error,data)->
+        console.log(error)
+        cb()
 _timer: null
 module.exports=
   test: ->
