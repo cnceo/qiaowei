@@ -1,4 +1,4 @@
-assets/org*.jpg
+assets/*.jpg
 qiaowei.sublime-workspace
 npm-*.log
 
