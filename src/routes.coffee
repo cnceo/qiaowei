@@ -55,9 +55,22 @@ module.exports                 = class Routes
         access_token = data.access_token 
         sina.users.show {source:config.sdks.sina.app_key,uid:data.uid,access_token:access_token,method:"GET"}, (error, data)->
           name = data.screen_name
-          res.cookie('sina_token',access_token);
-          res.redirect("/")          
-       
+          user.findOne {name:name},(err,item)->
+          item = new user() unless item
+          item.name= name
+          item.sinaToken= access_token
+          item.save (err)->
+            req.session.username = name
+            res.redirect("/")
+
+
+    app.get '*',(req,res,next)->
+      if res.locals.user    
+        next()
+      else
+        res.redirect '/login'
+
+
     app.get '/tqq_auth_cb', (req, res, next) ->
       tqq.oauth.accesstoken req.query.code , (error, data)->
         access_token = data.access_token
@@ -81,29 +94,16 @@ module.exports                 = class Routes
         res.redirect("/")
 
 
-      
-
-    app.get '*',(req,res,next)->
-      if res.locals.user    
-        next()
-      else
-        res.redirect '/login'
-
-
     app.get '/',(req,res,next)->
-      res.locals.userOrg= res.locals.user.owns[0]||res.locals.user.editorOf[0]||res.locals.posterOf[0]||null
-      res.locals.authorize = {
+      console.log res.locals.user
+      res.locals.userOrg= res.locals.user.owns[0]||res.locals.user.editorOf[0]||res.locals.user.posterOf[0]||null
+      res.locals.authorize = 
         "logout" : authorize.sina(_.extend({forcelogin:true},config.sdks.sina))
-        "sina" : authorize.sina(config.sdks.sina),
-        "renren" : authorize.renren(config.sdks.renren),
-        "douban" : authorize.douban(config.sdks.douban),
+        "sina" : authorize.sina(config.sdks.sina)
+        "renren" : authorize.renren(config.sdks.renren)
+        "douban" : authorize.douban(config.sdks.douban)
         "tqq" : authorize.tqq(config.sdks.tqq)
-      }
       res.render 'i'
-
-
-
-
 
 
 
