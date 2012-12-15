@@ -10,9 +10,9 @@ block content
   .org_info.module 
     h2(class = "hd")  组织
     .bd
-      .info_item 当前拥有的组织： 
       if user.owns.length
-        a(href="/org/#{user.owns[0]._id}/") #{user.owns[0].title}
+        .info_item 当前拥有的组织： 
+          a(href="/org/#{user.owns[0]._id}/") #{user.owns[0].title}
       else
         
         if userOrg
