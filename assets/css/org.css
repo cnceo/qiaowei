@@ -1,0 +1,19 @@
+.add_info .bd textarea{
+  width:100%;
+  max-width:500px;
+  height:100px;
+}
+.list_info .col{
+  display:inline;
+  float:left;
+  padding-left:5px;
+}
+.list_info .col_con{
+  width:400px;
+}
+.list_info .col_poster{
+  width:100px;
+}
+.list_info .col_del{
+  width:50px;
+}

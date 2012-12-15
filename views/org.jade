@@ -1,9 +1,41 @@
 extends layout
+
 block content
-  form(action='/org/#{org._id}/save',method='post')
-    input(type='text',name='org[title]',value='#{org.title}')
-    button(type='submit')
-  h2 内容库编辑
+  link(rel="stylesheet", type="text/css", href="/assets/css/org.css")
+  .error_info.module 
+    h2.hd 对不起，你不属于此组织，请向管理员申请添加您到组织中。
+    h2.hd ****，您好，这里是***的组织库
+  .org_info.module
+    h2.hd 组织信息
+    .bd
+      ul.info_list.clearfix
+        li.info_item 组织名称：****
+        li.info_item 成员构成：**** 
+        li.info_item 添加新成员：<input type=text placeholder="再次输入成员的微博名称"/> <button class=btn>添加</button>
+  .add_info.module 
+    h2.hd 添加一条内容
+    .bd 
+      form(action='/org/#{org._id}/save',method='post')
+        .info_item 
+          textarea(name="org[title]")
+        .info_item
+          button.btn 添加
+  .list_info.module
+    h2.hd 内容库
+    .bd 
+      .info_item.clearfix 
+        .col_con.col fsdfsdfsdfsdfdsf
+        .col_poster.col 添加者昵称
+        .col_del.col
+          a.del(href="#") 删除
+      .info_item
+        .col_con.col fsdfsdfsdfsdfdsf
+        .col_poster.col 添加者昵称
+        .col_del.col
+          a.del(href="#") 删除
+  script(src='/assets/js/org.js')
+
+//- block content
   for editor in org.editors
     p #{editor.name}
       a(href='editor/#{editor.id}/remove') 删除
@@ -22,20 +54,14 @@ block content
     input(type='text',name='user[name]',placeholder='用户名')
     button(type='submit')
 
-  h2 内容库
-  ul
-    for content in org.contents
-      li
-        a(href='/content/#{content._id}/') #{content.content}
-  p
-    a(href='/content/new/') 增加
+//- h2 内容库
+  for content in org.contents
+    p #{content.content}
+
   h2 计划任务
   ul
     for postSchedule in org.postSchedules
       li
         a(href='/postSchedule/#{postSchedule._id}/') #{moment(postSchedule.time).format('LLL')}开始每#{postSchedule.interval}分钟
-
-  p
-    a(href='/postSchedule/new/') 增加
 
   pre #{JSON.stringify(org,null,'  ')}
