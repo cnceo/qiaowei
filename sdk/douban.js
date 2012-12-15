@@ -402,7 +402,7 @@ Douban.prototype._base = function () {
             var headers = {};
             headers ["Content-length"] = body ? body.length : 0;
             headers ["Content-Type"] = 'application/x-www-form-urlencoded';
-            headers ['Authorization'] = "Bearer "+self.options.access_token
+            headers ['Authorization'] = "Bearer "+(options.access_token||self.options.access_token)
             request({
                 url:options.path,
                 method:options.method,
