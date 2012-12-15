@@ -58,6 +58,7 @@ module.exports.tick=tick= (cb)->
       $lte: moment(new Date()).add('seconds',5).toDate()
   await postSchedule.find(query).populate('org').exec defer err,items
   for item in items
+    await postSchedule.remove item,defer err
     await user.findById item.org.owner,defer err,owner
     await fs.exists path.join(__dirname,'..','assets',"post#{item._id}.jpg"),defer picExists
     picPath=null

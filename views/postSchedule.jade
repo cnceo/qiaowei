@@ -5,7 +5,7 @@ block content
   .add_info.module 
     .hd 添加一条定时
     .bd 
-      form(action="/postSchedule/#{postSchedule._id}/save",method='post')
+      form(action="/postSchedule/#{postSchedule._id}/save",method='post',enctype='multipart/form-data')
         .info_item
           .label 微博内容：
           .con
@@ -33,7 +33,7 @@ block content
         .info_item
           .label 添加图片：
           .con   
-            input(type="file")
+            input(type="file",name='file')
         .info_item
           .label
           .con

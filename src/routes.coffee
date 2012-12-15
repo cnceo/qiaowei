@@ -255,6 +255,16 @@ module.exports                 = class Routes
       res.locals.postSchedule[k]= v for k,v of req.body.postSchedule
       console.log "#{req.body.year}-#{req.body.month}-#{req.body.day} #{req.body.hour}:#{req.body.minute}:00}"
       res.locals.postSchedule.time= moment("#{req.body.year}-#{req.body.month}-#{req.body.day} #{req.body.hour}:#{req.body.minute}:00}",'YYYY-MM-DD h:m:s').toDate()
+
+
+      if req.files.file&&req.files.file.name
+        stream= fs.createReadStream req.files.file.path
+        stream.pipe fs.createWriteStream path.join __dirname,'..','assets',"post#{res.locals.postSchedule._id}.jpg"
+        stream.on 'close',next
+      else
+        next()
+
+    app.all '/postSchedule/:id/save',(req,res,next)-> 
       res.locals.postSchedule.save next
 
     app.all '/postSchedule/:id/save',(req,res,next)->
