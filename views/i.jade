@@ -66,7 +66,7 @@ block content
       .bd
         .info_item
           .title 头部模板图 （
-            a(href="#headThumb") 重新设置
+            a(id="head_pic") 重新设置
             |，
             a(href="/org/#{userOrg._id}/setHead") 删除
             |）
@@ -77,11 +77,11 @@ block content
             img(style='width:400px;',src = "/assets/org#{userOrg._id}head.jpg")
         .info_item
           .title 尾部模板图 （
-            a(href="#headThumb") 重新设置
+            a(id="foot_pic") 重新设置
             |，
             a(href="/org/#{userOrg._id}/setFoot") 删除
             |）
-          form.anchor#headThumb(enctype='multipart/form-data',method='post',action='/org/#{userOrg._id}/setFoot')
+          form.anchor#footThumb(enctype='multipart/form-data',method='post',action='/org/#{userOrg._id}/setFoot')
             input(type='file',name='file')
             button(type='submit') 上传
           .pic
