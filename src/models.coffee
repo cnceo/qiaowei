@@ -3,7 +3,7 @@ userSchema         = new mongoose.Schema
   name             : 
     type           : String
     required       : true
-    index          : true
+    unique: true
 
   sinaToken        : String
   renrenToken      : String

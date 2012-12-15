@@ -56,7 +56,7 @@ module.exports                 = class Routes
         sina.users.show {source:config.sdks.sina.app_key,uid:data.uid,access_token:access_token,method:"GET"}, (error, data)->
           name = data.screen_name
           user.findOne {name:name},(err,item)->
-          item = new user() unless item
+          item = new user() unless item?
           item.name= name
           item.sinaToken= access_token
           item.save (err)->
@@ -65,7 +65,8 @@ module.exports                 = class Routes
 
 
     app.get '*',(req,res,next)->
-      if res.locals.user    
+      if res.locals.user
+        res.locals.userOrg= res.locals.user.owns[0]||res.locals.user.editorOf[0]||res.locals.user.posterOf[0]||null
         next()
       else
         res.redirect '/login'
@@ -79,12 +80,10 @@ module.exports                 = class Routes
         access_token = data.access_token
         openid = data.openid
         tqq.user.info {clientip:"115.193.182.232",openid:openid,access_token:access_token},(error,data)->
-          name = data.data.nick
-        res.locals.user.qqToken.pop()
-        res.locals.user.qqToken.pop()
-        res.locals.user.qqToken.push access_token
-        res.locals.user.qqToken.push openid
-        next()
+          res.locals.user.qqName = data.data.nick
+          res.locals.user.qqToken.push access_token
+          res.locals.user.qqToken.push openid
+          next()
 
     app.get '/tqq_auth_cb', (req, res, next) ->    
       res.locals.user.save next
@@ -97,10 +96,10 @@ module.exports                 = class Routes
       return next() unless req.query.code
       renren.oauth.accesstoken req.query.code , (error, data)->
         access_token = data.access_token
-        renren.users.getInfo {access_token:access_token},(error,data)->
-          name = data[0].name
         res.locals.user.renrenToken= access_token
-        console.log res.locals.user
+        renren.users.getInfo {access_token:access_token},(error,data)->
+          res.locals.user.renrenName = data[0].name
+          next()
 
     app.get '/renren_auth_cb', (req, res, next) ->    
       res.locals.user.save next
@@ -115,9 +114,11 @@ module.exports                 = class Routes
       return next() unless req.query.code
       douban.oauth.accesstoken req.query.code , (error, data)->
         access_token = data.access_token
-        douban.user.me {access_token:access_token}, (error,data)->
-          name=data.name
         res.locals.user.doubanToken= access_token
+        douban.user.me {access_token:access_token}, (error,data)->
+          res.locals.user.doubanName= data.name
+          console.log res.locals.user
+          next()
 
     app.get '/douban_auth_cb', (req, res, next) ->    
       res.locals.user.save next
@@ -126,7 +127,6 @@ module.exports                 = class Routes
 
 
     app.get '/',(req,res,next)->
-      res.locals.userOrg= res.locals.user.owns[0]||res.locals.user.editorOf[0]||res.locals.user.posterOf[0]||null
       res.locals.authorize = 
         "logout" : authorize.sina(_.extend({forcelogin:true},config.sdks.sina))
         "sina" : authorize.sina(config.sdks.sina)
@@ -140,13 +140,17 @@ module.exports                 = class Routes
     app.all '/org/new/',(req,res,next)->
       res.locals.org = new org
         owner: res.locals.user
-      
+      res.locals.user.owns.push res.locals.org
+      res.locals.user.save next
+    app.all '/org/new/',(req,res,next)->
       res.locals.org.save next
     app.all '/org/new/',(req,res,next)->
       res.redirect "/org/#{res.locals.org._id}/"
 
     app.all '/org/:id/*',(req,res,next)->
-      org.findById(req.params.id).populate('postSchedules')
+      org.findById(req.params.id)
+      .populate('owner')
+      .populate('postSchedules')
       .populate('editors')
       .populate('posters')
       .populate('contents').exec (err,item)->
