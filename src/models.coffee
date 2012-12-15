@@ -24,6 +24,8 @@ userSchema         = new mongoose.Schema
 
 
 orgSchema          = new mongoose.Schema
+  title : 
+    type: String
   owner            : 
     type           : mongoose.Schema.Types.ObjectId
     ref            : 'user'

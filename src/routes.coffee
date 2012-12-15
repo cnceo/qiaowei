@@ -37,11 +37,12 @@ module.exports                 = class Routes
 
 
     app.all '/org/:id/:method?',(req,res,next)->
-      if req.param.id=='new'
+      console.log req.params
+      if req.params.id=='new'
         res.locals.org = new org()
         next()
       else
-        org.findById  req.param.id,(err,item)->
+        org.findById  req.params.id,(err,item)->
           res.locals.org = item 
           next err
 
@@ -49,7 +50,7 @@ module.exports                 = class Routes
       res.render 'org'
 
     app.post '/org/:id/save',(req,res,next)->
-      res.locals.org[k]= v for k,v of req.params.org
+      res.locals.org[k]= v for k,v of req.body.org
       res.locals.org.save next
 
     app.post '/org/:id/remove',(req,res,next)->
@@ -69,7 +70,7 @@ module.exports                 = class Routes
 
 
     app.all '/postSchedule/:id/:method?',(req,res,next)->
-      if req.param.id=='new'
+      if req.params.id=='new'
         res.locals.postSchedule = new postSchedule()
         next()
       else
@@ -82,7 +83,7 @@ module.exports                 = class Routes
 
 
     app.post '/postSchedule/:id/save',(req,res,next)->
-      res.locals.postSchedule[k]= v for k,v of req.params.postSchedule
+      res.locals.postSchedule[k]= v for k,v of req.body.postSchedule
       res.locals.postSchedule.save next
 
     app.post '/postSchedule/:id/remove',(req,res,next)->
@@ -97,9 +98,8 @@ module.exports                 = class Routes
 
 
 
-
     app.all '/content/:id/:method?',(req,res,next)->
-      if req.param.id=='new'
+      if req.params.id=='new'
         res.locals.content = new content()
         next()
       else
@@ -111,7 +111,7 @@ module.exports                 = class Routes
       res.render 'content'
 
     app.post '/content/:id/save',(req,res,next)->
-      res.locals.content[k]= v for k,v of req.params.content
+      res.locals.content[k]= v for k,v of req.body.content
       res.locals.content.save next
 
     app.post '/content/:id/remove',(req,res,next)->
