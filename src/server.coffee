@@ -18,6 +18,7 @@ app.configure ->
   app.use app.router
   app.use "/assets", express.static(path.join __dirname, "..", "assets")
   app.locals.moment= require 'moment'
+  app.locals.moment.lang('zh-cn');
 
 app.configure "development", ->
   app.use express.errorHandler()

@@ -28,6 +28,6 @@ block content
 
   h2 计划任务
   for postSchedule in org.postSchedules
-    p #{moment(postSchedule.time).format('YYYY/MM/DD')}
+    p #{moment(postSchedule.time).fromNow()}
 
   pre #{JSON.stringify(org,null,'  ')}
