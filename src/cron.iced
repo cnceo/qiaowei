@@ -30,6 +30,20 @@ sendSNS= (content,pic,type,token,cb)->
       sina.statuses.update {status:content,access_token:token},(error,data)->
         console.log(error)
         cb()
+  if type=="qq"
+    if pic
+      tqq.t.add_pic {
+        content:content,
+        clientip:"115.193.182.232",
+        pic:pic,
+        openid:token[1],
+        access_token:token[0]
+      }, (error,data)->
+        console.log(error)
+        cb()
+    else
+      cb()
+      
 _timer: null
 module.exports=
   test: ->
@@ -98,7 +112,7 @@ module.exports.tick=tick= (cb)->
         content: item.content
         pic: picPath
         type: 'qq'
-        token: owner.qqToken.join(',')
+        token: owner.qqToken
 
   if postQueue.length!=0
     console.log("queue noempty")
