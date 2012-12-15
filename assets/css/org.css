@@ -10,10 +10,13 @@
 }
 .list_info .col_con{
   width:400px;
+  background:#fff8e1;
 }
 .list_info .col_poster{
   width:100px;
+  background:#cfe8cc;
 }
 .list_info .col_del{
   width:50px;
+  background:#cce6e8;
 }
