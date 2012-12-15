@@ -13,7 +13,7 @@ userSchema         = new mongoose.Schema
   ]
   sources          : [
     type           : mongoose.Schema.Types.ObjectId,
-    ref            : 'postSchedule'
+    ref            : 'source'
   ]
 
 
