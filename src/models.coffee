@@ -56,6 +56,7 @@ postScheduleSchema = new mongoose.Schema
     type           : Number
     default        : 0
   contents         : [contentSchema]
+  retweet          : String
 
 contentSchema      = new mongoose.Schema
   _user            :
@@ -63,6 +64,8 @@ contentSchema      = new mongoose.Schema
     ref            : 'user'
   content          :
     type           : String
+
+
 
 module.exports     =
   org              : mongoose.model 'org',orgSchema
