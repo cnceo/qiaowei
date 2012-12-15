@@ -27,17 +27,9 @@ module.exports                 = class Routes
     @mount app if app?
   mount                        : (app)->
 
-    app.get '/logout',(req,res,next)->
-      # 退出
-      res.redirect '/login'
 
-    app.get '/login',(req,res,next)->
-      res.render 'login'
-
-      
     app.get '*',(req,res,next)->
-      return res.redirect '/login' unless req.session.username
-      # 找到用户名，否则打回/login
+      return next() unless req.session.username
       user.findOne({name:req.session.username})
       .populate('owns')
       .populate('editorOf')
@@ -45,6 +37,47 @@ module.exports                 = class Routes
       .exec (err,item)->
         res.locals.user = item
         next err
+
+    app.get '/logout',(req,res,next)->
+      req.session.username= null
+      res.redirect '/login'
+
+    app.get '/login',(req,res,next)->
+      res.render 'login'
+
+
+
+    
+    app.get '/sina_auth_cb', (req, res, next) ->
+      sina.oauth.accesstoken req.query.code , (error, data)->
+        access_token = data.access_token 
+        res.cookie('sina_token',access_token);
+        res.redirect("/")          
+       
+    app.get '/tqq_auth_cb', (req, res, next) ->
+      tqq.oauth.accesstoken req.query.code , (error, data)->
+        access_token = data.access_token
+        openid = data.openid
+        res.cookie('tqq_token',access_token);
+        res.cookie('tqq_openid',openid);
+        res.redirect("/")
+
+    app.get '/renren_auth_cb', (req, res, next) ->
+      renren.oauth.accesstoken req.query.code , (error, data)->
+        access_token = data.access_token
+        openid = data.openid
+        res.cookie('renren_token',access_token);
+        res.redirect("/")
+       
+    app.get '/douban_auth_cb', (req, res, next) ->
+      douban.oauth.accesstoken req.query.code , (error, data)->
+        access_token = data.access_token
+        openid = data.openid
+        res.cookie('douban_token',access_token);
+        res.redirect("/")
+
+
+      
 
     app.get '*',(req,res,next)->
       if res.locals.user    
@@ -234,31 +267,3 @@ module.exports                 = class Routes
     app.post '/content/:id/:method',(req,res,next)->
       res.redirect 'back'
     
-    
-    app.get '/sina_auth_cb', (req, res, next) ->
-      sina.oauth.accesstoken req.query.code , (error, data)->
-        access_token = data.access_token 
-        res.cookie('sina_token',access_token);
-        res.redirect("/")          
-       
-    app.get '/tqq_auth_cb', (req, res, next) ->
-      tqq.oauth.accesstoken req.query.code , (error, data)->
-        access_token = data.access_token
-        openid = data.openid
-        res.cookie('tqq_token',access_token);
-        res.cookie('tqq_openid',openid);
-        res.redirect("/")
-
-    app.get '/renren_auth_cb', (req, res, next) ->
-      renren.oauth.accesstoken req.query.code , (error, data)->
-        access_token = data.access_token
-        openid = data.openid
-        res.cookie('renren_token',access_token);
-        res.redirect("/")
-       
-    app.get '/douban_auth_cb', (req, res, next) ->
-      douban.oauth.accesstoken req.query.code , (error, data)->
-        access_token = data.access_token
-        openid = data.openid
-        res.cookie('douban_token',access_token);
-        res.redirect("/")
