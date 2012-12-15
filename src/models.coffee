@@ -53,7 +53,6 @@ postScheduleSchema = new mongoose.Schema
     type           : Number
     required       : true
   contents         : [contentSchema]
-  sources          : [sourceSchema]
 
 contentSchema      = new mongoose.Schema
   _user            :
