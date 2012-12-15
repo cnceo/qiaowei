@@ -22,11 +22,14 @@ module.exports                 = class Routes
     app.get '/',(req,res,next)->
       res.render 'index'
 
+    app.get '/org/:id/'
+
 
     app.get '/postSchedule/:id/',(req,res,next)->
       postSchedule.findById req.params.id,(err,item)->
         res.locals.postSchedule = item
         next err
+
     app.get '/postSchedule/:id/',(req,res,next)->
         res.render 'postSchedule'
 
@@ -37,12 +40,4 @@ module.exports                 = class Routes
 
     app.get '/content/:id/',(req,res,next)->
       res.render 'content'
-
-    app.get '/source/:id/',(req,res,next)->
-      source.findByID req.params.id,(err,item)->
-        res.locals.source= item
-        next err
-
-    app.get '/source/:id/',(req,res,next)->
-      res.render 'source'
       
