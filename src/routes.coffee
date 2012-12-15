@@ -36,7 +36,7 @@ module.exports                 = class Routes
 
 
 
-    app.all '/org/:id/',(req,res,next)->
+    app.all '/org/:id/:method?',(req,res,next)->
       org.findById  req.param.id,(err,item)->
         res.locals.org = item || new org()
         next err
@@ -45,6 +45,7 @@ module.exports                 = class Routes
       res.render 'org'
 
     app.post '/org/:id/save',(req,res,next)->
+      res.locals.org[k]= v for k,v of req.params.org
       res.locals.org.save next
 
     app.post '/org/:id/remove',(req,res,next)->
@@ -63,7 +64,7 @@ module.exports                 = class Routes
 
 
 
-    app.all '/postSchedule/:id/',(req,res,next)->
+    app.all '/postSchedule/:id/:method?',(req,res,next)->
       postSchedule.findById req.params.id,(err,item)->
         res.locals.postSchedule = item
         next err
@@ -73,6 +74,7 @@ module.exports                 = class Routes
 
 
     app.post '/postSchedule/:id/save',(req,res,next)->
+      res.locals.postSchedule[k]= v for k,v of req.params.postSchedule
       res.locals.postSchedule.save next
 
     app.post '/postSchedule/:id/remove',(req,res,next)->
@@ -88,7 +90,7 @@ module.exports                 = class Routes
 
 
 
-    app.all '/content/:id/',(req,res,next)->
+    app.all '/content/:id/:method?',(req,res,next)->
       content.findById req.params.id,(err,item)->
         res.locals.content = item
         next err
@@ -97,6 +99,7 @@ module.exports                 = class Routes
       res.render 'content'
 
     app.post '/content/:id/save',(req,res,next)->
+      res.locals.content[k]= v for k,v of req.params.content
       res.locals.content.save next
 
     app.post '/content/:id/remove',(req,res,next)->
