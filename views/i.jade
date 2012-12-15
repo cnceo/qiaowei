@@ -6,7 +6,7 @@ block content
     h2(class = "hd") 用户信息
     .bd
       ul(class = "info_list clearfix")
-        li(class = "info_item") 昵称：#{user.name} (<a href="/logout">切换账号</a>）
+        li(class = "info_item") 昵称：#{user.name} (<a href="#{authorize.logout}">切换账号</a>）
   .org_info.module 
     h2(class = "hd")  组织
     .bd

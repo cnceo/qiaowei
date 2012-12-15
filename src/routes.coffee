@@ -21,7 +21,7 @@ sina = new Sina(config.sdks.sina)
 tqq = new TQQ(config.sdks.tqq)
 renren = new RenRen(config.sdks.renren)
 douban = new Douban(config.sdks.douban)
-
+_ = require 'underscore'
 module.exports                 = class Routes
   constructor                  : (app)->
     @mount app if app?
@@ -32,6 +32,9 @@ module.exports                 = class Routes
       res.redirect '/login'
 
     app.get '/login',(req,res,next)->
+      res.locals.authorize = {
+        "login" : authorize.sina(config.sdks.sina)
+      }
       res.render 'login'
 
       
@@ -55,6 +58,7 @@ module.exports                 = class Routes
     app.get '/',(req,res,next)->
       res.locals.userOrg= res.locals.user.owns[0]||res.locals.user.editorOf[0]||res.locals.posterOf[0]||null
       res.locals.authorize = {
+        "logout" : authorize.sina(_.extend({forcelogin:true},config.sdks.sina))
         "sina" : authorize.sina(config.sdks.sina),
         "renren" : authorize.renren(config.sdks.renren),
         "douban" : authorize.douban(config.sdks.douban),
