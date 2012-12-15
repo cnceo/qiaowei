@@ -33,6 +33,7 @@ block content
           a(href="#{authorize.sina}") 点击绑定
           |）
       .info_item 腾讯微博 
+        - console.log(user);
         if user.qqToken.length
           |（已绑定）
         else

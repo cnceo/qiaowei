@@ -75,27 +75,38 @@ module.exports                 = class Routes
       tqq.oauth.accesstoken req.query.code , (error, data)->
         access_token = data.access_token
         openid = data.openid
-        res.cookie('tqq_token',access_token);
-        res.cookie('tqq_openid',openid);
-        res.redirect("/")
+        res.locals.user.qqToken.pop()
+        res.locals.user.qqToken.pop()
+        res.locals.user.qqToken.push access_token
+        res.locals.user.qqToken.push openid
+        res.locals.user.save next
+        
+    app.get '/tqq_auth_cb', (req, res, next) ->
+      res.redirect("/")
 
     app.get '/renren_auth_cb', (req, res, next) ->
       renren.oauth.accesstoken req.query.code , (error, data)->
         access_token = data.access_token
-        openid = data.openid
-        res.cookie('renren_token',access_token);
-        res.redirect("/")
+
+        res.locals.user.renrenToken= access_token
+        console.log res.locals.user
+        res.locals.user.save next
+        
+    app.get '/renren_auth_cb', (req, res, next) ->
+      res.redirect("/")
        
     app.get '/douban_auth_cb', (req, res, next) ->
       douban.oauth.accesstoken req.query.code , (error, data)->
         access_token = data.access_token
-        openid = data.openid
-        res.cookie('douban_token',access_token);
-        res.redirect("/")
+
+        res.locals.user.doubanToken= access_token
+        res.locals.user.save next
+        
+    app.get '/douban_auth_cb', (req, res, next) ->
+      res.redirect("/")
 
 
     app.get '/',(req,res,next)->
-      console.log res.locals.user
       res.locals.userOrg= res.locals.user.owns[0]||res.locals.user.editorOf[0]||res.locals.user.posterOf[0]||null
       res.locals.authorize = 
         "logout" : authorize.sina(_.extend({forcelogin:true},config.sdks.sina))
