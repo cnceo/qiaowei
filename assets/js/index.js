@@ -1,6 +1,6 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
+$("#head_pic").click(function(){
+  $("#headThumb").css("display","block")
+})
+$("#foot_pic").click(function(){
+  $("#footThumb").css("display","block")
+})
