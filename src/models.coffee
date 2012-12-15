@@ -3,12 +3,15 @@ userSchema         = new mongoose.Schema
   name             : 
     type           : String
     required       : true
-    index: true
+    index          : true
 
   sinaToken        : String
   renrenToken      : String
+  renrenName       : String
   doubanToken      : String
+  doubanName       : String
   qqToken          : [String]
+  qqName           : String 
   
   editorOf         :[
     type           : mongoose.Schema.Types.ObjectId

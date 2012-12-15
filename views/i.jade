@@ -27,25 +27,30 @@ block content
     .bd
       .info_item 新浪微博 
         if user.sinaToken
-          |（已绑定）
+          |（已绑定 #{user.name}）
         else
           |（未绑定，
           a(href="#{authorize.sina}") 点击绑定
           |）
       .info_item 腾讯微博 
-        - console.log(user);
         if user.qqToken.length
-          |（已绑定）
+          |（已绑定 #{user.qqName}
+          a(href='/tqq_auth_cb') 解除绑定
+          |）
         else
           |（未绑定，<a href="#{authorize.tqq}">点击绑定</a>）
       .info_item 人人网 
         if user.renrenToken
-          |（已绑定）
+          |（已绑定 #{user.renrenName}
+          a(href='/renren_auth_cb') 解除绑定
+          |）
         else
           |（未绑定，<a href="#{authorize.renren}">点击绑定</a>） 
       .info_item 豆瓣 
         if user.doubanToken
-          |（已绑定）
+          |（已绑定 #{user.doubanName}
+          a(href='/douban_auth_cb') 解除绑定
+          |）
         else
           |（未绑定，<a href="#{authorize.douban}">点击绑定</a>）
   if userOrg

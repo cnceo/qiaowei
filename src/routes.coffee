@@ -54,7 +54,6 @@ module.exports                 = class Routes
       sina.oauth.accesstoken req.query.code , (error, data)->
         access_token = data.access_token 
         sina.users.show {source:config.sdks.sina.app_key,uid:data.uid,access_token:access_token,method:"GET"}, (error, data)->
-          console.log(error)
           name = data.screen_name
           user.findOne {name:name},(err,item)->
           item = new user() unless item
@@ -73,6 +72,9 @@ module.exports                 = class Routes
 
  
     app.get '/tqq_auth_cb', (req, res, next) ->
+      res.locals.user.qqToken.pop()
+      res.locals.user.qqToken.pop()
+      return next() unless req.query.code
       tqq.oauth.accesstoken req.query.code , (error, data)->
         access_token = data.access_token
         openid = data.openid
@@ -84,30 +86,41 @@ module.exports                 = class Routes
         res.locals.user.qqToken.pop()
         res.locals.user.qqToken.push access_token
         res.locals.user.qqToken.push openid
-        res.locals.user.save next
-        
+        next()
+
+    app.get '/tqq_auth_cb', (req, res, next) ->    
+      res.locals.user.save next
     app.get '/tqq_auth_cb', (req, res, next) ->
       res.redirect("/")
 
+
     app.get '/renren_auth_cb', (req, res, next) ->
+      res.locals.user.renrenToken= null
+      return next() unless req.query.code
       renren.oauth.accesstoken req.query.code , (error, data)->
         access_token = data.access_token
         renren.users.getInfo {access_token:access_token},(error,data)->
           console.log(data)
         res.locals.user.renrenToken= access_token
         console.log res.locals.user
-        res.locals.user.save next
-        
+
+    app.get '/renren_auth_cb', (req, res, next) ->    
+      res.locals.user.save next
     app.get '/renren_auth_cb', (req, res, next) ->
       res.redirect("/")
+
+
+
        
     app.get '/douban_auth_cb', (req, res, next) ->
+      res.locals.user.doubanToken= null
+      return next() unless req.query.code
       douban.oauth.accesstoken req.query.code , (error, data)->
         access_token = data.access_token
-
         res.locals.user.doubanToken= access_token
-        res.locals.user.save next
-        
+
+    app.get '/douban_auth_cb', (req, res, next) ->    
+      res.locals.user.save next
     app.get '/douban_auth_cb', (req, res, next) ->
       res.redirect("/")
 
