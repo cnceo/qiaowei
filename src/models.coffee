@@ -1,49 +1,50 @@
-mongoose           = require 'mongoose'
-userSchema         = new mongoose.Schema
-  name             : 
-    type           : String
-    required       : true
+mongoose        = require 'mongoose'
+userSchema      = new mongoose.Schema
+  name          : 
+    type        : String
+    required    : true
 
-  sinaToken        : String
-  renrenToken      : String
-  doubanToken      : String
-  qqToken          : [String]
+  sinaToken     : String
+  renrenToken   : String
+  doubanToken   : String
+  qqToken       : [String]
   
-  editorsOf        :[
-    type           : mongoose.Schema.Types.ObjectId
-    ref            : 'org'
+  editorsOf     :[
+    type        : mongoose.Schema.Types.ObjectId
+    ref         : 'org'
   ]
-  posterOf         :[
-    type           : mongoose.Schema.Types.ObjectId
-    ref            : 'org'
+  posterOf      :[
+    type        : mongoose.Schema.Types.ObjectId
+    ref         : 'org'
   ]
-  owns             : [
-    type           : mongoose.Schema.Types.ObjectId
-    ref            : 'org'
+  owns          : [
+    type        : mongoose.Schema.Types.ObjectId
+    ref         : 'org'
   ]
 
 
-orgSchema          = new mongoose.Schema
-  title : 
-    type: String
-  owner            : 
-    type           : mongoose.Schema.Types.ObjectId
-    ref            : 'user'
-  posters          : [
-    type           : mongoose.Schema.Types.ObjectId
-    ref            : 'user'
+orgSchema       = new mongoose.Schema
+  title         : 
+    type        : String
+    default     : '公司名称'
+  owner         : 
+    type        : mongoose.Schema.Types.ObjectId
+    ref         : 'user'
+  posters       : [
+    type        : mongoose.Schema.Types.ObjectId
+    ref         : 'user'
   ]
-  editors          : [
-    type           : mongoose.Schema.Types.ObjectId
-    ref            : 'user'
+  editors       : [
+    type        : mongoose.Schema.Types.ObjectId
+    ref         : 'user'
   ]
-  postSchedules    :[
-    type           : mongoose.Schema.Types.ObjectId,
-    ref            : 'postSchedule'
+  postSchedules :[
+    type        : mongoose.Schema.Types.ObjectId,
+    ref         : 'postSchedule'
   ]
-  contents         : [
-    type           : mongoose.Schema.Types.ObjectId,
-    ref            : 'content'
+  contents      : [
+    type        : mongoose.Schema.Types.ObjectId,
+    ref         : 'content'
   ]
 
 

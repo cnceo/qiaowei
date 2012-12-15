@@ -35,16 +35,16 @@ module.exports                 = class Routes
 
 
 
+    app.all '/org/new/',(req,res,next)->
+      res.locals.org = new org()
+      res.locals.org.save next
+    app.all '/org/new/',(req,res,next)->
+      res.redirect "/org/#{res.locals.org._id}/"
 
     app.all '/org/:id/:method?',(req,res,next)->
-      console.log req.params
-      if req.params.id=='new'
-        res.locals.org = new org()
-        next()
-      else
-        org.findById  req.params.id,(err,item)->
-          res.locals.org = item 
-          next err
+      org.findById req.params.id,(err,item)->
+        res.locals.org = item 
+        next err
 
     app.get '/org/:id/',(req,res,next)->
       res.render 'org'
@@ -66,17 +66,19 @@ module.exports                 = class Routes
 
 
 
+    app.all '/postSchedule/new/',(req,res,next)->
+      res.locals.postSchedule = new postSchedule()
+      res.locals.postSchedule.save next
+    app.all '/postSchedule/new/',(req,res,next)->
+      res.redirect "/postSchedule/#{res.locals.postSchedule._id}/"
+
 
 
 
     app.all '/postSchedule/:id/:method?',(req,res,next)->
-      if req.params.id=='new'
-        res.locals.postSchedule = new postSchedule()
-        next()
-      else
-        postSchedule.findById req.params.id,(err,item)->
-          res.locals.postSchedule = item
-          next err
+      postSchedule.findById req.params.id,(err,item)->
+        res.locals.postSchedule = item
+        next err
 
     app.get '/postSchedule/:id/',(req,res,next)->
         res.render 'postSchedule'
@@ -97,15 +99,17 @@ module.exports                 = class Routes
 
 
 
+    app.all '/content/new/',(req,res,next)->
+      res.locals.content = new content()
+      res.locals.content.save next
+    app.all '/content/new/',(req,res,next)->
+      res.redirect "/content/#{res.locals.content._id}/"
+
 
     app.all '/content/:id/:method?',(req,res,next)->
-      if req.params.id=='new'
-        res.locals.content = new content()
-        next()
-      else
-        content.findById req.params.id,(err,item)->
-          res.locals.content = item
-          next err
+      content.findById req.params.id,(err,item)->
+        res.locals.content = item
+        next err
 
     app.get '/content/:id/',(req,res,next)->
       res.render 'content'
