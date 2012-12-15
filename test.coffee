@@ -27,9 +27,11 @@ describe 'models',->
 
   describe 'models',->
     it 'works',(done)->
-      models.postSchedule.find {},(err,item)->
+      models.postSchedule.find({}).populate('_user').exec (err,item)->
+        console.log item
         assert.equal item.length,1
         models.user.find({}).populate('postSchedules').exec (err,item)->
           assert.equal item.length,1
           assert.equal item[0].postSchedules.length,1
+          
           done err

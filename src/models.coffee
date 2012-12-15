@@ -18,7 +18,7 @@ userSchema         = new mongoose.Schema
 
 
 postScheduleSchema = new mongoose.Schema
-  user             :
+  _user            :
     type           : mongoose.Schema.Types.ObjectId
     ref            : 'user'
   time             :
@@ -31,14 +31,14 @@ postScheduleSchema = new mongoose.Schema
   sources          : [sourceSchema]
 
 contentSchema      = new mongoose.Schema
-  user             :
+  _user             :
     type           : mongoose.Schema.Types.ObjectId
     ref            : 'user'
   content          :
     type           : String
 
 sourceSchema       = new mongoose.Schema
-  user             :
+  _user             :
     type           : mongoose.Schema.Types.ObjectId
     ref            : 'user'
   url              :
