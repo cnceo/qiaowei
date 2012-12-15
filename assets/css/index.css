@@ -1,5 +1,5 @@
 .module {
-    margin-top:20px;
+    margin-top:10px;
 }
 .module .hd{
       height:30px;
@@ -18,13 +18,18 @@
     }
     .user_info .info_item{
       width:200px;
-      font-size:12px;
       float:left;
+      line-height:18px;
+      margin-top:5px;
     }
     .org_info {
       
     }
     .org_info .info_item{
+      line-height:18px;
+      margin-top:5px;
+    }
+    .sns_info .info_item{
       line-height:18px;
       margin-top:5px;
     }
