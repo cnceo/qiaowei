@@ -55,9 +55,6 @@ postScheduleSchema = new mongoose.Schema
   interval         :
     type           : Number
     default        : 0
-  enabled          : true
-    type           : Boolean
-    default        : false
   contents         : [contentSchema]
 
 contentSchema      = new mongoose.Schema
