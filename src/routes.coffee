@@ -42,7 +42,7 @@ module.exports                 = class Routes
       res.redirect "/org/#{res.locals.org._id}/"
 
     app.all '/org/:id/:method?',(req,res,next)->
-      org.findById req.params.id,(err,item)->
+      org.findById(req.params.id).populate(['postSchedule','user','content']).exec (err,item)->
         res.locals.org = item 
         next err
 
