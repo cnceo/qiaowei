@@ -56,7 +56,7 @@ block content
         form(method='post',action='save')
           ul.info_list.clearfix
             li.info_item 组织名称：
-              input(type='text',name='org[title]',placeholder=org.title)
+              input(type='text',name='org[title]',value=org.title)
               button.btn(type='submit') 修改
             li.info_item 组织老大：#{org.owner.name}
             li.info_item 组织构成：
