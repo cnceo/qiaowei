@@ -128,7 +128,6 @@ module.exports                 = class Routes
         res.locals.user.doubanToken= access_token
         douban.user.me {access_token:access_token}, (error,data)->
           res.locals.user.doubanName= data.name
-          console.log res.locals.user
           next()
 
     app.get '/douban_auth_cb', (req, res, next) ->    
@@ -145,8 +144,6 @@ module.exports                 = class Routes
         "douban" : authorize.douban(config.sdks.douban)
         "tqq" : authorize.tqq(config.sdks.tqq)
       res.render 'i'
-
-
 
     app.all '/org/new/',(req,res,next)->
       res.locals.org = new org
