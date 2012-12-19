@@ -58,23 +58,26 @@ module.exports                 = class Routes
     
     app.get '/sina_auth_cb', (req, res, next) ->
       sina.oauth.accesstoken req.query.code , (error, data)->
-        access_token = data.access_token 
-        sina.users.show {source:config.sdks.sina.app_key,uid:data.uid,access_token:access_token,method:"GET"}, (error, data)->
-          name = data.screen_name
-          user.findOne {name:name},(err,item)->
-          item = new user() unless item?
-          item.name= name
-          item.sinaToken= access_token
-          item.save (err)->
-            req.session.username = name
-            expires = new Date Date.now()+2592000000
-            res.cookie '_u', (md5 name), {
-              expires: expires, 
-              httpOnly: true,
-              domain:config.main_domain
-            }
-            res.redirect("/")
-
+        if data
+          access_token = data.access_token 
+          sina.users.show {source:config.sdks.sina.app_key,uid:data.uid,access_token:access_token,method:"GET"}, (error, data)->
+            name = data.screen_name
+            user.findOne {name:name},(err,item)->
+            item = new user() unless item?
+            item.name= name
+            item.sinaToken= access_token
+            item.save (err)->
+              req.session.username = name
+              expires = new Date Date.now()+2592000000
+              res.cookie '_u', (md5 name), {
+                expires: expires, 
+                httpOnly: true,
+                domain:config.main_domain
+              }
+              res.redirect("/")
+        else
+          res.render 'error'
+            error:"无权限或者新浪微博系统问题，请重试！"
 
     app.all '*',(req,res,next)->
       if res.locals.user

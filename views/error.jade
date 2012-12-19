@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  :stylus
+    #content{
+      padding:20px;
+    }
+    #content a{
+      font-size:30px;
+    }
+  #content    
+    a(href="#{authorize.login}") 少年，出错了：#{error}
