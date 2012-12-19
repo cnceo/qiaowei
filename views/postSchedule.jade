@@ -5,18 +5,20 @@ block content
   .add_info.module 
     .hd 添加一条定时
     .bd 
-      form(action="/postSchedule/#{postSchedule._id}/save",method='post',enctype='multipart/form-data')
+      form(action="/user/#{user._id}/postSchedules/create",method='post',enctype='multipart/form-data')
         .info_item
           .label 微博内容：
           .con
-            textarea#source(placeholder="微博内容",name='postSchedule[content]',value=postSchedule.content)
+            textarea#source(placeholder="微博内容",name='postSchedule[content]',value="")
         .info_item
           .label 或者直接从内容库选择：
           .con
             select#ku
               option(value="----") 
-              for content in org.contents
-                option(value=content.content) #{content.content}
+              for org in orgs
+                for content in org.contents
+                  span org.title
+                  option(value=content.content) #{content.content}
         .info_item
           .label 定时发布的时间：
           .con
@@ -34,6 +36,10 @@ block content
           .label 添加图片：
           .con   
             input(type="file",name='file')
+        .info_item
+          .label 自动拼图：
+          .con   
+            input(type="checkbox",name='pin',checked="true")
         .info_item
           .label
           .con

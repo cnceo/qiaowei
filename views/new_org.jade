@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  :stylus
+    #content{
+      padding:20px;
+    }
+    #content a{
+      font-size:30px;
+    }
+    input{
+      height:18px; 
+    }
+  #content    
+    form(action="/org/new/",method="post")
+      input(placeholder="组织名称",name="title")
+      button.btn(type="submit") 提交

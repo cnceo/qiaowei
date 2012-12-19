@@ -1,0 +1,42 @@
+extends layout
+
+block content
+  link(rel="stylesheet", type="text/css", href="/assets/css/org.css")
+  .queue_info.module
+    h2.hd(style="padding-left:10px;") #{user.name}，您好，这里是您的的定时列表
+    .bd 
+      .info_item.clearfix.th 
+        .col_time.col 发布时间
+        .col_con.col 微博内容
+        .col_pic.col 微博图片
+        .col_del.col 操作
+      if !user.postSchedules.length
+        .info_item.empty 一不小心，列表为空鸟！赶紧加点新鲜的定时发布吧！
+      for postSchedule in user.postSchedules
+        .info_item.clearfix 
+          .col_time.col #{moment(postSchedule.time).format('LLL')}
+          .col_con.col #{postSchedule.content||'-'}
+          .col_pic.col 
+            img(src="/assets/post#{postSchedule._id}.jpg", width="100", height="100")
+          .col_del.col
+            a.del(href="/postSchedule/#{postSchedule._id}/remove") 删除
+  p.add_queue 
+    a(href='postSchedules/new') 添加新的定时发布
+  div#bigpic(style="display:none;")
+  script
+    $(".col_pic").mouseenter(function(){
+          $(this).addClass("hover")
+          var pos=$(this).offset()
+          $("#bigpic").css({
+              left:pos.left+90,
+              top:pos.top,
+              display:"block"  
+          }).html("<img src='"+$("img",this).attr("src")+"' />")
+      })
+      $(".col_pic").mouseleave(function(){
+          $(this).removeClass("hover")
+          $("#bigpic").css({
+              display:"none"  
+          })
+      })
+  script(src='/assets/js/org.js')

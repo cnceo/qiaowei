@@ -2,87 +2,55 @@ extends layout
 
 block content
   link(rel="stylesheet", type="text/css", href="/assets/css/org.css")
-
-  p.tab
-    a(class=mode=='postSchedules'?'':'active' ,href='?mode=') 组织信息
-    a(class=mode=='postSchedules'?'active':'',href='?mode=postSchedules') 管理定时发布
   .error_info.module 
-    if String(org._id)!=(userOrg._id)
-      h2.hd 对不起，你不属于此组织，请向管理员申请添加您到组织中。
+    - var isMember = false;var isMaster = false;
+    - org.members.forEach(function(m){ if(m.name.toString()==user.name.toString()) isMember=true; });
+    - if(org.owner._id.toString()==user._id.toString()) {isMaster = true;}
+    if isMaster 
+      h2.hd 您好，管理员。
+    else if isMember
+      h2.hd 您好，你是本组织的成员，可以添加内容到组织的内容库。
     else
-  if mode=='postSchedules'
-
-    
-    h2.hd(style="padding-left:10px;") #{user.name}，您好，这里是您的的定时列表
-    .queue_info.module
-      .hd 定时列表
-      .bd 
-        .info_item.clearfix.th 
-          .col_time.col 发布时间
-          .col_con.col 微博内容
-          .col_pic.col 微博图片
-          .col_del.col 操作
-        for postSchedule in org.postSchedules
-          .info_item.clearfix 
-            .col_time.col #{moment(postSchedule.time).format('LLL')}
-            .col_con.col #{postSchedule.content||'-'}
-            .col_pic.col 
-              img(src="/assets/post#{postSchedule._id}.jpg", width="100", height="100")
-            .col_del.col
-              a.del(href="/postSchedule/#{postSchedule._id}/remove") 删除
-    p.add_queue 
-      a(href='postSchedules/new') 添加新的定时发布
-    div#bigpic(style="display:none;")
-    script
-      $(".col_pic").mouseenter(function(){
-            $(this).addClass("hover")
-            var pos=$(this).offset()
-            $("#bigpic").css({
-                left:pos.left+90,
-                top:pos.top,
-                display:"block"  
-            }).html("<img src='"+$("img",this).attr("src")+"' />")
-        })
-        $(".col_pic").mouseleave(function(){
-            $(this).removeClass("hover")
-            $("#bigpic").css({
-                display:"none"  
-            })
-        })
-  else
-    .org_info.module
-      h2.hd 组织信息
-      .bd
-        form(method='post',action='save')
-          ul.info_list.clearfix
-            li.info_item 组织名称：
-              input(type='text',name='org[title]',value=org.title)
-              button.btn(type='submit') 修改
-            li.info_item 组织老大：#{org.owner.name}
-            li.info_item 组织构成：
-              for member in org.members
-                span #{member.name}
-                a(href='members/#{member.name}/remove') 删除
-        form(action='members/new',method='post')
-          ul.info_list.clearfix
-            li.info_item 添加新成员：
-            input(type='text',name='member[name]',placeholder='请输入成员的微博用户名') 
-            button.btn 添加
-    .add_info.module 
-      h2.hd 添加一条内容
-      .bd 
-        form(action='/org/#{org._id}/contents/new',method='post')
-          .info_item 
-            textarea(name="content[content]")
-          .info_item
-            button.btn(type='submit') 添加
-    .list_info.module
-      h2.hd 内容库
-      .bd 
-        for content in org.contents
-          .info_item.clearfix 
-            .col_con.col #{content.content}
-            .col_poster.col 添加者:#{content.creator}
-            .col_del.col
-              a.del(href="/content/#{content._id}/remove") 删除
+      h2.hd 对不起，你不属于此组织，请向管理员申请添加您到组织中。
+    if isMaster||isMember
+      if isMaster
+        .org_info.module
+          h2.hd 组织信息
+          .bd
+            form(method='post',action='save')
+              ul.info_list.clearfix
+                li.info_item 组织名称：
+                  input(type='text',name='org[title]',value=org.title)
+                  button.btn(type='submit') 修改
+                li.info_item 组织老大：#{org.owner.name}
+                li.info_item 组织构成：
+                  if !org.members.length
+                    span.blue 还没有成员，赶紧添加点小弟吧，妥妥的~~~
+                  for member in org.members
+                    span #{member.name}
+                    a(href='members/#{member.name}/remove') 删除
+            form(action='members/new',method='post')
+              ul.info_list.clearfix
+                li.info_item 添加新成员：
+                input(type='text',name='member[name]',placeholder='请输入成员的微博用户名') 
+                button.btn 添加
+      .add_info.module 
+        h2.hd 添加一条内容
+        .bd 
+          form(action='/org/#{org._id}/contents/new',method='post')
+            .info_item 
+              textarea(name="content[content]")
+            .info_item
+              button.btn(type='submit') 添加
+      .list_info.module
+        h2.hd 内容库
+        .bd 
+          if !org.contents.length
+            .info_item.empty 一不小心，列表为空鸟！赶紧加点新鲜的内容吧！
+          for content in org.contents
+            .info_item.clearfix 
+              .col_con.col #{content.content}
+              .col_poster.col #{content.creator}
+              .col_del.col
+                a.del(href="/content/#{content._id}/remove") 删除
   script(src='/assets/js/org.js')

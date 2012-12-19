@@ -6,6 +6,12 @@
       line-height:18px;
       margin-top:5px;
     }
+    .org_info .new{
+      padding-left:20px;
+    }
+    .org_info .own, .org_info .org{
+      padding-right:10px;
+    }
     .org_info {
       
     }

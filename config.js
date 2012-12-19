@@ -1,5 +1,6 @@
 
 module.exports = {
+  "main_domain":"www.qwsns.com",
   "sdks" : {
     "sina" : {
       "client_id" : "99395284",

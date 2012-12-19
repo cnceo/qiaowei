@@ -16,6 +16,10 @@ userSchema         = new mongoose.Schema
     type           : mongoose.Schema.Types.ObjectId
     ref            : 'org'
   ]
+  postSchedules    :[
+    type           : mongoose.Schema.Types.ObjectId,
+    ref            : 'postSchedule'
+  ]
 memberSchema       = new mongoose.Schema
   name             : String
   org              : 
@@ -35,10 +39,6 @@ orgSchema          = new mongoose.Schema
     type           : mongoose.Schema.Types.ObjectId
     ref            : 'member'
   ]
-  postSchedules    :[
-    type           : mongoose.Schema.Types.ObjectId,
-    ref            : 'postSchedule'
-  ]
   contents         : [
     type           : mongoose.Schema.Types.ObjectId,
     ref            : 'content'
@@ -56,15 +56,15 @@ postScheduleSchema = new mongoose.Schema
     type           : String
     default        : ''
   retweet          : String
-  org              : 
+  user              : 
     type           : mongoose.Schema.Types.ObjectId
-    ref            : 'org'
+    ref            : 'user'
 
 contentSchema      = new mongoose.Schema
   _user            :
     type           : mongoose.Schema.Types.ObjectId
     ref            : 'user'
-  content          :
+  content          : 
     type           : String
   org              : 
     type           : mongoose.Schema.Types.ObjectId

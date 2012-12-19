@@ -11,19 +11,18 @@ block content
   .org_info.module 
     h2(class = "hd")  组织
     .bd
-      if user.owns.length
-        .info_item 当前拥有的组织： 
-          a(href="/org/#{user.owns[0]._id}/") #{user.owns[0].title}
+      .info_item 当前拥有的组织： 
+        each own in user.owns
+          a.own(href="/org/#{own._id}/") #{own.title}
+        a.new(href="/org/new_org/") 创建组织
+      if userOrgs.length
+        .info_item 当前所属的组织（不包含自己创建的）：
+          each uo in userOrgs
+            a.org(href="/org/#{uo.org._id}/") #{uo.org.title} 
       else
-        
-        if userOrg
-          .info_item 当前所属的组织：
-          .item
-            a(href="/org/#{userOrg._id}/?mode=postSchedules") #{userOrg.title}
-        else
-          .info_item 您当前不属于任何组织，请联系组织管理者添加您到工作组中，或者点击
-          a(href="/org/new/") 创建组织
-          |。
+        .info_item 您当前不属于任何组织，请联系组织管理者添加您到工作组中，或者点击
+        a.new(href="/org/new_org/") 创建组织
+        |。
   .sns_info.module
     h2(class = "hd")  绑定社交网络，绑定后信息才可以同步到此社交网络
     .bd
@@ -55,12 +54,12 @@ block content
           |）
         else
           |（未绑定，<a href="#{authorize.douban}">点击绑定</a>）
-  if userOrg
+  if user.owns.length
     .sns_info.module
       h2(class = "hd")  定时功能
       .bd
         .info_item 
-          a(href='/org/#{userOrg._id}/?mode=postSchedules') 管理定时发布 (#{userOrg.postSchedules.length}条待发布)
+          a(href='/user/#{user._id}/list') 管理定时发布 (#{user.postSchedules.length}条待发布)
 
     .sns_info.module
       h2(class = "hd")  设置首尾拼图
@@ -69,22 +68,22 @@ block content
           .title 头部模板图 （
             a(id="head_pic") 重新设置
             |，
-            a(href="/org/#{userOrg._id}/setHead") 删除
+            a(href="/user/#{user._id}/setHead") 删除
             |）
-          form.anchor#headThumb(enctype='multipart/form-data',method='post',action='/org/#{userOrg._id}/setHead')
+          form.anchor#headThumb(enctype='multipart/form-data',method='post',action='/user/#{user._id}/setHead')
             input(type='file',name='file')
             button(type='submit') 上传
           .pic
-            img(src = "/assets/org#{userOrg._id}head.jpg")
+            img(src = "/assets/user#{user._id}head.jpg")
         .info_item
           .title 尾部模板图 （
             a(id="foot_pic") 重新设置
             |，
-            a(href="/org/#{userOrg._id}/setFoot") 删除
+            a(href="/user/#{user._id}/setFoot") 删除
             |）
-          form.anchor#footThumb(enctype='multipart/form-data',method='post',action='/org/#{userOrg._id}/setFoot')
+          form.anchor#footThumb(enctype='multipart/form-data',method='post',action='/user/#{user._id}/setFoot')
             input(type='file',name='file')
             button(type='submit') 上传
           .pic
-            img(src = "/assets/org#{userOrg._id}foot.jpg")
+            img(src = "/assets/user#{user._id}foot.jpg")
   script(src='/assets/js/index.js')

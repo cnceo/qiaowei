@@ -111,25 +111,14 @@ module.exports.tick=tick= (cb)->
       $ne: ''
     time:
       $lte: new Date()
-  await postSchedule.find(query).populate('org').exec defer err,items
+  await postSchedule.find(query).populate('user').exec defer err,items
   for item in items
-    await user.findById item.org.owner,defer err,owner
+    owner = item.user
     await postSchedule.remove item,defer err
     await fs.exists path.join(__dirname,'..','assets',"post#{item._id}.jpg"),defer picExists
     picPath=null
     if picExists
-      args=[]
-      args.push path.join(__dirname,'..','assets',"post#{item._id}.jpg")
-      await fs.exists path.join(__dirname,'..','assets',"org#{item.org._id}head.jpg"),defer headExists
-      if headExists
-        args.push path.join(__dirname,'..','assets',"org#{item.org._id}head.jpg")
-      await fs.exists path.join(__dirname,'..','assets',"org#{item.org._id}foot.jpg"),defer footExists
-      if footExists
-        args.push path.join(__dirname,'..','assets',"org#{item.org._id}foot.jpg")
-      args.push '-append'
-      args.push path.join(__dirname,'..','assets',"post#{item._id}target.jpg")
-      await im.convert args,defer err,stderr
-      picPath=path.join(__dirname,'..','assets',"post#{item._id}target.jpg")
+      picPath=path.join(__dirname,'..','assets',"post#{item._id}.jpg")
     if owner.sinaToken?
       postQueue.push
         content: item.content

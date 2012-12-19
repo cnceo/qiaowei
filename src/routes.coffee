@@ -24,6 +24,11 @@ tqq = new TQQ(config.sdks.tqq)
 renren = new RenRen(config.sdks.renren)
 douban = new Douban(config.sdks.douban)
 _ = require 'underscore'
+md5 = require 'MD5'
+im = require 'imagemagick'
+image = require './image'
+
+
 module.exports                 = class Routes
   constructor                  : (app)->
     @mount app if app?
@@ -33,6 +38,7 @@ module.exports                 = class Routes
       return next() unless req.session.username
       user.findOne({name:req.session.username})
       .populate('owns')
+      .populate('postSchedules')
       .exec (err,item)->
         res.locals.user = item
         next err
@@ -61,28 +67,26 @@ module.exports                 = class Routes
           item.sinaToken= access_token
           item.save (err)->
             req.session.username = name
+            expires = new Date Date.now()+2592000000
+            res.cookie '_u', (md5 name), {
+              expires: expires, 
+              httpOnly: true,
+              domain:config.main_domain
+            }
             res.redirect("/")
 
 
     app.all '*',(req,res,next)->
       if res.locals.user
         member.find({name:res.locals.user.name})
+        .populate('org')
         .exec (err,items)->
-          res.locals.userOrg= res.locals.user.owns[0]
-          if items.length
-            res.locals.userOrg||=items[0].org
-          if res.locals.userOrg
-            org.findById(res.locals.userOrg)
-            .populate('postSchedules')
-            .exec (err,item)->
-              res.locals.userOrg = item
-              next err
-          else
-            next()
+          res.locals.userOrgs= items
+          next err
       else
         res.redirect '/login'
 
- 
+        
     app.get '/tqq_auth_cb', (req, res, next) ->
       res.locals.user.qqToken.pop()
       res.locals.user.qqToken.pop()
@@ -144,10 +148,12 @@ module.exports                 = class Routes
         "douban" : authorize.douban(config.sdks.douban)
         "tqq" : authorize.tqq(config.sdks.tqq)
       res.render 'i'
-
+    app.all '/org/new_org/',(req,res,next)->
+      res.render 'new_org'
     app.all '/org/new/',(req,res,next)->
       res.locals.org = new org
         owner: res.locals.user
+        title:req.body.title
       res.locals.user.owns.push res.locals.org
       res.locals.user.save next
     app.all '/org/new/',(req,res,next)->
@@ -158,7 +164,6 @@ module.exports                 = class Routes
     app.all '/org/:id/*',(req,res,next)->
       org.findById(req.params.id)
       .populate('owner')
-      .populate('postSchedules')
       .populate('members')
       .populate('contents').exec (err,item)->
         res.locals.org = item 
@@ -178,28 +183,47 @@ module.exports                 = class Routes
     app.post '/org/:id/remove',(req,res,next)->
       res.locals.org.remove next
 
-
-    app.all '/org/:id/setHead',(req,res,next)->
-      headPath= path.join(__dirname,'..','assets',"org#{res.locals.org._id}head.jpg")
-      if req.files.file&&req.files.file.name
-        stream= fs.createReadStream req.files.file.path
-        stream.pipe fs.createWriteStream headPath 
-        stream.on 'close',next
-      else
-        fs.unlink headPath,(err)->
-          next()
-    app.all '/org/:id/setFoot',(req,res,next)->
-      headPath= path.join(__dirname,'..','assets',"org#{res.locals.org._id}foot.jpg")
-      if req.files.file&&req.files.file.name
-        stream= fs.createReadStream req.files.file.path
-        stream.pipe fs.createWriteStream headPath 
-        stream.on 'close',next
-      else
-        fs.unlink headPath,(err)->
-          next()
-
     app.all '/org/:id/:method',(req,res,next)->
       res.redirect 'back'
+    app.get '/user/:id/list',(req,res,next)->
+      res.render 'list'
+    app.all '/user/:id/setHead',(req,res,next)->
+      headPath= path.join(__dirname,'..','assets',"user#{res.locals.user._id}head.jpg")
+      if req.files.file&&req.files.file.name
+        stream= fs.createReadStream req.files.file.path
+        stream.pipe fs.createWriteStream headPath 
+        stream.on 'close',next
+      else
+        fs.unlink headPath,(err)->
+          next()
+    app.all '/user/:id/setHead',(req,res,next)->
+      headPath= path.join(__dirname,'..','assets',"user#{res.locals.user._id}head.jpg")
+      if req.files.file&&req.files.file.name
+        image.resizeTo440 headPath,(err,data)->
+          next err
+      else
+        next()
+      
+    app.all '/user/:id/setFoot',(req,res,next)->
+      headPath= path.join(__dirname,'..','assets',"user#{res.locals.user._id}foot.jpg")
+      if req.files.file&&req.files.file.name
+        stream= fs.createReadStream req.files.file.path
+        stream.pipe fs.createWriteStream headPath 
+        stream.on 'close',next
+      else
+        fs.unlink headPath,(err)->
+          next()
+    app.all '/user/:id/setFoot',(req,res,next)->
+      headPath= path.join(__dirname,'..','assets',"user#{res.locals.user._id}foot.jpg")
+      if req.files.file&&req.files.file.name
+        image.resizeTo440 headPath,(err,data)->
+          next err
+      else
+        next()
+      
+    app.all '/user/:id/:method',(req,res,next)->
+      res.redirect 'back'
+    
 
 
 
@@ -224,17 +248,42 @@ module.exports                 = class Routes
     app.all '/org/:id/members/:name/:method',(req,res,next)->
       res.redirect 'back'
 
-
-
-    app.all '/org/:id/postSchedules/new',(req,res,next)->
+    app.all '/user/:id/postSchedules/new',(req,res,next)->
+      org.find({owner:res.locals.user._id}).populate('contents').exec (err,items)->
+        res.locals.orgs= items
+        next err
+    app.all '/user/:id/postSchedules/new',(req,res,next)->
+      res.render 'postSchedule'
+    
+    app.all '/user/:id/postSchedules/create',(req,res,next)->
       res.locals.postSchedule = new postSchedule
-        org: res.locals.org
-      res.locals.org.postSchedules.push res.locals.postSchedule
+        user: res.locals.user
+      res.locals.postSchedule[k]= v for k,v of req.body.postSchedule
+      res.locals.postSchedule.time= moment("#{req.body.year}-#{req.body.month}-#{req.body.day} #{req.body.hour}:#{req.body.minute}:00}",'YYYY-MM-DD h:m:s').toDate()
+      if req.files.file&&req.files.file.name
+        stream= fs.createReadStream req.files.file.path
+        stream.pipe fs.createWriteStream path.join __dirname,'..','assets',"post#{res.locals.postSchedule._id}.jpg"
+        stream.on 'close',next
+      else
+        next()
+    app.all '/user/:id/postSchedules/create',(req,res,next)->
+      if req.files.file&&req.files.file.name&&req.body.pin
+        image.resizeMain440 path.join(__dirname,'..','assets',"post#{res.locals.postSchedule._id}.jpg"),(err,data)->
+          image.append [
+            path.join(__dirname,'..','assets',"user#{res.locals.user._id}head.jpg")
+            path.join __dirname,'..','assets',"post#{res.locals.postSchedule._id}.jpg"
+            path.join(__dirname,'..','assets',"user#{res.locals.user._id}foot.jpg")
+          ],path.join(__dirname,'..','assets',"post#{res.locals.postSchedule._id}.jpg"),(err,data)->
+            next err
+      else
+        next()
+    app.all '/user/:id/postSchedules/create',(req,res,next)->
       res.locals.postSchedule.save next
-    app.all '/org/:id/postSchedules/new',(req,res,next)->
-      res.locals.org.save next
-    app.all '/org/:id/postSchedules/new',(req,res,next)->
-      res.redirect "/postSchedule/#{res.locals.postSchedule._id}/"
+    app.all '/user/:id/postSchedules/create',(req,res,next)->
+      res.locals.user.postSchedules.push res.locals.postSchedule
+      res.locals.user.save next
+    app.all '/user/:id/postSchedules/create',(req,res,next)->
+      res.redirect "/user/#{res.locals.user._id}/list"
 
 
     app.all '/postSchedule/:id/*',(req,res,next)->
@@ -243,8 +292,8 @@ module.exports                 = class Routes
         next err
 
     app.all '/postSchedule/:id/*',(req,res,next)->
-      org.findById(res.locals.postSchedule.org).populate('contents').exec (err,item)->
-        res.locals.org= item
+      org.find({owner:res.locals.user._id}).populate('contents').exec (err,items)->
+        res.locals.orgs= items
         next err
 
     app.all '/postSchedule/:id/*',(req,res,next)->
@@ -252,26 +301,6 @@ module.exports                 = class Routes
       next()
     app.get '/postSchedule/:id/',(req,res,next)->
       res.render 'postSchedule'
-
-
-    app.all '/postSchedule/:id/save',(req,res,next)->
-      res.locals.postSchedule[k]= v for k,v of req.body.postSchedule
-      console.log "#{req.body.year}-#{req.body.month}-#{req.body.day} #{req.body.hour}:#{req.body.minute}:00}"
-      res.locals.postSchedule.time= moment("#{req.body.year}-#{req.body.month}-#{req.body.day} #{req.body.hour}:#{req.body.minute}:00}",'YYYY-MM-DD h:m:s').toDate()
-
-
-      if req.files.file&&req.files.file.name
-        stream= fs.createReadStream req.files.file.path
-        stream.pipe fs.createWriteStream path.join __dirname,'..','assets',"post#{res.locals.postSchedule._id}.jpg"
-        stream.on 'close',next
-      else
-        next()
-
-    app.all '/postSchedule/:id/save',(req,res,next)-> 
-      res.locals.postSchedule.save next
-
-    app.all '/postSchedule/:id/save',(req,res,next)->
-      res.redirect "/org/#{res.locals.postSchedule.org._id}/?mode=postSchedules"
 
 
     app.all '/postSchedule/:id/remove',(req,res,next)->
