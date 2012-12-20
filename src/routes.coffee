@@ -33,7 +33,7 @@ module.exports                 = class Routes
   constructor                  : (app)->
     @mount app if app?
   mount                        : (app)->
-
+    
     app.all '*',(req,res,next)->
       return next() unless req.session.username
       user.findOne({name:req.session.username})
@@ -58,27 +58,28 @@ module.exports                 = class Routes
     
     app.get '/sina_auth_cb', (req, res, next) ->
       sina.oauth.accesstoken req.query.code , (error, data)->
-        if data
+        if !error
           access_token = data.access_token 
           sina.users.show {source:config.sdks.sina.app_key,uid:data.uid,access_token:access_token,method:"GET"}, (error, data)->
-            name = data.screen_name
-            user.findOne {name:name},(err,item)->
-            item = new user() unless item?
-            item.name= name
-            item.sinaToken= access_token
-            item.save (err)->
-              req.session.username = name
-              expires = new Date Date.now()+2592000000
-              res.cookie '_u', (md5 name), {
-                expires: expires, 
-                httpOnly: true,
-                domain:config.main_domain
-              }
-              res.redirect("/")
+            if error 
+              next error
+            else 
+              name = data.screen_name
+              user.findOne {name:name},(err,item)->
+              item = new user() unless item?
+              item.name= name
+              item.sinaToken= access_token
+              item.save (err)->
+                req.session.username = name
+                expires = new Date Date.now()+2592000000
+                res.cookie '_u', (md5 name), {
+                  expires: expires, 
+                  httpOnly: true,
+                  domain:config.main_domain
+                }
+                res.redirect("/")
         else
-          res.render 'error'
-            error:"无权限或者新浪微博系统问题，请重试！"
-
+          next error
     app.all '*',(req,res,next)->
       if res.locals.user
         member.find({name:res.locals.user.name})
@@ -350,4 +351,6 @@ module.exports                 = class Routes
 
     app.all '/content/:id/:method',(req,res,next)->
       res.redirect 'back'
+    
+
     

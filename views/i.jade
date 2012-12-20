@@ -56,11 +56,12 @@ block content
           |（未绑定，<a href="#{authorize.douban}">点击绑定</a>）
   if user.owns.length
     .sns_info.module
-      h2(class = "hd")  定时功能
+      h2(class = "hd")  功能
       .bd
         .info_item 
           a(href='/user/#{user._id}/list') 管理定时发布 (#{user.postSchedules.length}条待发布)
-
+        .info_item 
+          a(href='#') 聚合管理社交网络（开发中）
     .sns_info.module
       h2(class = "hd")  设置首尾拼图
       .bd

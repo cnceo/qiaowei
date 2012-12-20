@@ -19,7 +19,9 @@ app.configure ->
   app.use express.session(secret: 'fdafdsafdvcxzjklfdsa')
   app.use express.methodOverride()
   app.use app.router
-  
+  app.use (err, req, res, next)->
+    res.render 'error'
+      error:err
   app.locals.moment= require 'moment'
   app.locals.moment.lang('zh-cn');
 
