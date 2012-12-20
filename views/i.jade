@@ -54,37 +54,36 @@ block content
           |）
         else
           |（未绑定，<a href="#{authorize.douban}">点击绑定</a>）
-  if user.owns.length
-    .sns_info.module
-      h2(class = "hd")  功能
-      .bd
-        .info_item 
-          a(href='/user/#{user._id}/list') 管理定时发布 (#{user.postSchedules.length}条待发布)
-        .info_item 
-          a(href='#') 聚合管理社交网络（开发中）
-    .sns_info.module
-      h2(class = "hd")  设置首尾拼图
-      .bd
-        .info_item
-          .title 头部模板图 （
-            a(id="head_pic") 重新设置
-            |，
-            a(href="/user/#{user._id}/setHead") 删除
-            |）
-          form.anchor#headThumb(enctype='multipart/form-data',method='post',action='/user/#{user._id}/setHead')
-            input(type='file',name='file')
-            button(type='submit') 上传
-          .pic
-            img(src = "/assets/user#{user._id}head.jpg")
-        .info_item
-          .title 尾部模板图 （
-            a(id="foot_pic") 重新设置
-            |，
-            a(href="/user/#{user._id}/setFoot") 删除
-            |）
-          form.anchor#footThumb(enctype='multipart/form-data',method='post',action='/user/#{user._id}/setFoot')
-            input(type='file',name='file')
-            button(type='submit') 上传
-          .pic
-            img(src = "/assets/user#{user._id}foot.jpg")
+  .sns_info.module
+    h2(class = "hd")  功能
+    .bd
+      .info_item 
+        a(href='/user/#{user._id}/list') 管理定时发布 (#{user.postSchedules.length}条待发布)
+      .info_item 
+        a(href='#') 聚合管理社交网络（开发中）
+  .sns_info.module
+    h2(class = "hd")  设置首尾拼图
+    .bd
+      .info_item
+        .title 头部模板图 （
+          a(id="head_pic") 重新设置
+          |，
+          a(href="/user/#{user._id}/setHead") 删除
+          |）
+        form.anchor#headThumb(enctype='multipart/form-data',method='post',action='/user/#{user._id}/setHead')
+          input(type='file',name='file')
+          button(type='submit') 上传
+        .pic
+          img(src = "/assets/user#{user._id}head.jpg")
+      .info_item
+        .title 尾部模板图 （
+          a(id="foot_pic") 重新设置
+          |，
+          a(href="/user/#{user._id}/setFoot") 删除
+          |）
+        form.anchor#footThumb(enctype='multipart/form-data',method='post',action='/user/#{user._id}/setFoot')
+          input(type='file',name='file')
+          button(type='submit') 上传
+        .pic
+          img(src = "/assets/user#{user._id}foot.jpg")
   script(src='/assets/js/index.js')
