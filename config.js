@@ -3,9 +3,9 @@ module.exports = {
   "main_domain":"www.qwsns.com",
   "sdks" : {
     "sina" : {
-      "client_id" : "2890597502",
-      "app_key" : "2890597502",
-      "app_secret" : "201ef757108ac8caa4b7b5d2248f1e88",
+      "client_id" : "99395284",
+      "app_key" : "99395284",
+      "app_secret" : "abdee7a47ba5d96e646ffb2f1923b81d",
       "redirect_uri" : "http://www.qwsns.com/sina_auth_cb"
     },
     "tqq" : {
