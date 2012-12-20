@@ -273,11 +273,15 @@ module.exports                 = class Routes
     app.all '/user/:id/postSchedules/create',(req,res,next)->
       if req.files.file&&req.files.file.name&&req.body.pin
         image.resizeMain440 path.join(__dirname,'..','assets',"post#{res.locals.postSchedule._id}.jpg"),(err,data)->
-          image.append [
-            path.join(__dirname,'..','assets',"user#{res.locals.user._id}head.jpg")
-            path.join __dirname,'..','assets',"post#{res.locals.postSchedule._id}.jpg"
-            path.join(__dirname,'..','assets',"user#{res.locals.user._id}foot.jpg")
-          ],path.join(__dirname,'..','assets',"post#{res.locals.postSchedule._id}.jpg"),(err,data)->
+          headPath = path.join(__dirname,'..','assets',"user#{res.locals.user._id}head.jpg")
+          footPath = path.join(__dirname,'..','assets',"user#{res.locals.user._id}foot.jpg")
+          args= []
+          if fs.existsSync headPath 
+            args.push headPath
+          args.push path.join(__dirname,'..','assets',"post#{res.locals.postSchedule._id}.jpg")
+          if fs.existsSync footPath
+            args.push footPath
+          image.append args,path.join(__dirname,'..','assets',"post#{res.locals.postSchedule._id}.jpg"),(err,data)->
             next err
       else
         next()
